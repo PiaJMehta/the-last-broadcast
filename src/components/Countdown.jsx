@@ -1,0 +1,64 @@
+import React, { useState, useEffect } from 'react';
+
+const Countdown = () => {
+  const targetDate = new Date('2026-04-06T12:00:00').getTime();
+
+  const [timeLeft, setTimeLeft] = useState({
+    days: "00",
+    hours: "00",
+    minutes: "00",
+    seconds: "00"
+  });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference <= 0) {
+        clearInterval(timer);
+        setTimeLeft({ days: "00", hours: "00", minutes: "00", seconds: "00" });
+      } else {
+        // Time calculations for days, hours, minutes and seconds
+        const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+        setTimeLeft({
+          days: String(d).padStart(2, '0'),
+          hours: String(h).padStart(2, '0'),
+          minutes: String(m).padStart(2, '0'),
+          seconds: String(s).padStart(2, '0')
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [targetDate]);
+
+  // Array to map through for the UI
+  const displayData = [
+    { label: "DAYS", value: timeLeft.days },
+    { label: "HRS", value: timeLeft.hours },
+    { label: "MIN", value: timeLeft.minutes },
+    { label: "SEC", value: timeLeft.seconds },
+  ];
+
+  return (
+    <div className="flex gap-2 justify-center py-4">
+      {displayData.map((item, i) => (
+        <div key={i} className="flex flex-col items-center">
+          <div className="text-4xl font-bold px-3 py-2 bg-green-500/10 border border-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.2)] text-green-500">
+            {item.value}
+          </div>
+          <span className="text-[8px] mt-1 opacity-50 font-bold tracking-tighter">
+            {item.label}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default Countdown;
