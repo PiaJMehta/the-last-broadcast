@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — SIGNAL NOT FOUND</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&display=swap"
+    rel="stylesheet" />
+  <script>
+    // GitHub Pages serves 404.html for any unknown route.
+    // We intercept known mystery paths here and redirect BEFORE the 404 UI renders.
+    (function () {
+      var path = window.location.pathname;
+      var routes = { 'sector-7': '/sector-7/', 'signal-omega': '/sector-7/' };
+      for (var key in routes) {
+        if (path.includes(key)) {
+          window.location.replace(routes[key]);
+          return;
+        }
+      }
+    })();
+  </script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #070707;
+      --border: #1e1e1e;
+      --dim: #2a2a2a;
+      --muted: #484848;
+      --body: #808080;
+      --green: #39ff14;
+      --red: #ff2a1f;
+      --r2: #8b1a14;
+      --mono: 'Share Tech Mono', monospace;
+      --display: 'Bebas Neue', sans-serif;
+    }
+
+    html {
+      background: var(--bg);
+      color: var(--body);
+      font-family: var(--mono);
+      font-size: 13px;
+      cursor: crosshair;
+      height: 100%;
+    }
+
+    body {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+    }
+
+    html::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, .12) 2px, rgba(0, 0, 0, .12) 4px);
+      pointer-events: none;
+      z-index: 9900;
+    }
+
+    @keyframes glitch {
+
+      0%,
+      88%,
+      100% {
+        text-shadow: none;
+        transform: translate(0);
+      }
+
+      89% {
+        text-shadow: -3px 0 var(--red), 3px 0 var(--green);
+        transform: translate(-2px, 0);
+      }
+
+      91% {
+        text-shadow: 3px 0 var(--red), -3px 0 var(--green);
+        transform: translate(2px, 0);
+      }
+
+      93% {
+        text-shadow: none;
+        transform: translate(0);
+      }
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .err-code {
+      font-family: var(--display);
+      font-size: clamp(80px, 20vw, 160px);
+      color: var(--red);
+      letter-spacing: 8px;
+      line-height: 1;
+      animation: glitch 4s infinite;
+    }
+
+    .err-msg {
+      font-size: clamp(12px, 2vw, 16px);
+      letter-spacing: 6px;
+      color: var(--muted);
+      margin: 12px 0 8px;
+    }
+
+    .err-sub {
+      font-size: 11px;
+      color: var(--dim);
+      line-height: 2;
+      margin-bottom: 28px;
+    }
+
+    .blink {
+      animation: blink 1s step-end infinite;
+      color: var(--red);
+    }
+
+    .btn {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 3px;
+      padding: 10px 20px;
+      border: 1px solid var(--green);
+      color: var(--green);
+      text-decoration: none;
+      transition: background .2s, color .2s;
+      cursor: crosshair;
+    }
+
+    .btn:hover {
+      background: var(--green);
+      color: #000;
+    }
+
+    .hint {
+      margin-top: 48px;
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--dim);
+      line-height: 2;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <div class="err-code">404</div>
+    <div class="err-msg">SIGNAL NOT FOUND</div>
+    <p class="err-sub">
+      This transmission was never sent.<br>
+      Or something intercepted it.<br><br>
+      <span class="blink">_</span>
+    </p>
+    <a class="btn" href="/">← RETURN TO BROADCAST</a>
+    <div class="hint">
+      // not all paths are linked<br>
+      // some must be discovered<br>
+      // keep looking
+    </div>
+  </div>
+</body>
+
+</html>
