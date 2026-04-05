@@ -6,6 +6,7 @@ import MapDisplay from './components/MapDisplay';
 import Rules from './components/Rules';
 import SurvivalStatus from './components/SurvivalStatus';
 import SystemLogs from './components/SystemLogs';
+import ProfileCard from './components/SurvivalChances';
 
 function App() {
   const [view, setView] = useState('home');
@@ -53,7 +54,10 @@ function App() {
               </div>
             </section>
 
-            {/* 4. RULES SECTION */}
+            {/* 4.) checking survival chances - upon submission leads to the hint stored in local storage */}
+            <ProfileCard />
+
+            {/* 5. RULES SECTION */}
             <section className="border-t border-green-900/30 bg-green-900/5 pb-20">
               <div className="max-w-7xl mx-auto">
                 <Rules />
