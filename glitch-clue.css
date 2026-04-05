@@ -1,0 +1,62 @@
+/* glitch-clue.css
+   TRANSMISSION INTERCEPTED 
+   env-dark     → background:#070707;          [dark mode active]
+   env-gradient → background:linear-gradient(135deg,#070707,#0d1a07,#070707,#1a0707);
+   env-pixel    → image-rendering:pixelated; image-rendering:crisp-edges;    
+   REQUIREMENT: pixelated images      
+*/
+
+.gl-entry {
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  margin-bottom: 3px;
+  cursor: crosshair;
+  transition: border-color .2s;
+  background: var(--card);
+}
+.gl-entry:hover { border-color: var(--green); }
+
+.gl-entry-head {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 4px;
+  flex-wrap: wrap; gap: 4px;
+}
+.gl-entry-id   { font-size: 9px; letter-spacing: 3px; color: var(--dim); }
+.gl-entry-time { font-size: 9px; color: var(--r2); }
+
+.gl-decode-block {
+  border: 1px solid #222;
+  padding: 16px 18px;
+  margin-top: 10px;
+  cursor: crosshair;
+  display: flex; flex-direction: column;
+  align-items: flex-start; gap: 10px;
+  background: #0a0a0a;
+  transition: border-color .2s, box-shadow .2s;
+  user-select: none;
+}
+.gl-decode-block:hover,
+.gl-decode-block.decoding {
+  border-color: var(--red);
+  box-shadow: 0 0 10px rgba(255,42,31,.08);
+}
+.gl-decode-block.decoded {
+  border-color: var(--green);
+  box-shadow: 0 0 10px rgba(57,255,20,.08);
+}
+/*REQUIREMENT: use CSS gradients */
+
+.gl-code-text {
+  font-size: 11px; letter-spacing: .1em;
+  color: var(--muted); word-break: break-all;
+  line-height: 1.75; transition: color .3s; width: 100%;
+}
+.gl-decode-block.decoded .gl-code-text { color: var(--green); }
+
+.gl-progress-wrap { width: 100%; height: 1px; background: var(--dim); overflow: hidden; }
+.gl-progress-bar  { height: 100%; background: var(--red); width: 0%; transition: width .04s linear; }
+.gl-decode-block.decoded .gl-progress-bar { background: var(--green); width: 100%; }
+/* REQUIREMENT: implement dark mode */
+
+.gl-cta     { font-size: 9px; letter-spacing: 3px; color: #333; text-transform: uppercase; }
+.gl-success { font-size: 9px; letter-spacing: 3px; color: var(--green); text-transform: uppercase; }
