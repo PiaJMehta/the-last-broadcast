@@ -6,7 +6,7 @@ import MapDisplay from './components/MapDisplay';
 import Rules from './components/Rules';
 import SurvivalStatus from './components/SurvivalStatus';
 import SystemLogs from './components/SystemLogs';
-import ProfileCard from './components/ProfileCard';
+import ProfileCard from './components/SurvivalChances';
 
 function App() {
   const [view, setView] = useState('home');
