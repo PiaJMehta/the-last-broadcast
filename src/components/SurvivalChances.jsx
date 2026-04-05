@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 // Check your chances of survival, the answer reveals a clue that is hidden in the local storage. The clue will
 // tell the participants to add a profile card to their site.
 
-const ProfileCard = () => {
+const SurvivalChances = () => {
     const [profile, setProfile] = useState({
         codename: "",
         skill: "",
@@ -156,4 +156,4 @@ const ProfileCard = () => {
     );
 }
 
-export default ProfileCard;
+export default SurvivalChances;

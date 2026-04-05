@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../glitch-clue.css';
 
 const SystemLogs = () => {
   const [logs, setLogs] = useState([
@@ -38,6 +39,12 @@ const SystemLogs = () => {
         <div className="w-2 h-4 bg-green-500 animate-pulse inline-block"></div>
       </div>
     </div>
+    <div className="mt-4 text-center">
+      <h2 className="glitch text-green-400 text-sm tracking-widest">
+        SIGNAL_CORRUPTION_DETECTED
+      </h2>
+    </div>
+  </div>
   );
 };
 

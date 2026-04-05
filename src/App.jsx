@@ -62,25 +62,24 @@ function App() {
 
             {/* 5. HINTS SECTION */}
             <section className="max-w-7xl mx-auto px-10 pt-16 pb-20">
-              {/* Top row: natural sizing */}
               <div
                 style={{
                   display: "flex",
                   gap: "32px",
                   marginBottom: "32px",
                   alignItems: "flex-start",
+                  flexWrap: "wrap",
                 }}
               >
-                <div style={{ flex: "1.25", minWidth: 0 }}>
+                <div style={{ flex: "1.25", minWidth: "420px" }}>
                   <Wordle />
                 </div>
 
-                <div style={{ flex: "0.9", minWidth: 0 }}>
+                <div style={{ flex: "0.9", minWidth: "320px" }}>
                   <PressCounter />
                 </div>
               </div>
 
-              {/* Troll below */}
               <TrollRiddles />
             </section>
 
