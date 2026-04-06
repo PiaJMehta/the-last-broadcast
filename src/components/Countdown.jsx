@@ -65,8 +65,8 @@ const Countdown = () => {
           </div>
         ))}
       </div>
-      <p className="text-center text-[10px] opacity-10 animation-pulse font-bold tracking-widest">
-        S3CT0R-?_L13S_B3Y0ND_TH3_S3V3NTH_M0NTH
+      <p className="text-center text-[10px] opacity-11 animation-pulse font-bold tracking-widest">
+       TH4L4_W0ULD_P1CK_?_–_/S3CT0R-?
       </p>
     </div>
   );
