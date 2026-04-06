@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const Countdown = () => {
-  const targetDate = new Date('2026-04-06T12:00:00').getTime();
+  const targetDate = new Date('2026-04-12T12:00:00').getTime();
 
   useEffect(() => {
     const payload = `COUNTDOWN::Let_the_world_know_that_time_is_running_out::targetDate=${JSON.stringify(Date.now())}`
