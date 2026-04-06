@@ -9,7 +9,7 @@ const riddles = [
   {
     question:
       "I warn people before danger, disaster, or evacuation. I am loud and often red. What am I?",
-    answer: "alarm",
+    answer: "siren",
   },
   {
     question:
@@ -38,6 +38,12 @@ export default function TrollRiddles() {
   const handleSubmit = () => {
     const userAnswer = input.trim().toLowerCase();
     const correctAnswer = riddles[current].answer.toLowerCase();
+
+    // Block empty / whitespace-only input
+    if (!userAnswer) {
+      setError("Enter a response before transmitting.");
+      return;
+    }
 
     if (
       userAnswer === correctAnswer ||
@@ -87,7 +93,10 @@ export default function TrollRiddles() {
               <input
                 type="text"
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  setError("");
+                }}
                 onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                 placeholder="TYPE YOUR ANSWER..."
                 className="flex-1 bg-black border border-zinc-800 focus:border-green-500 outline-none px-4 py-3 text-green-400 tracking-wider uppercase"
