@@ -11,7 +11,6 @@
         href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Pixelify+Sans&display=swap"
         rel="stylesheet" />
     <style>
-        /* ── Reset ── */
         *,
         *::before,
         *::after {
@@ -20,7 +19,6 @@
             box-sizing: border-box;
         }
 
-        /* ── Design Tokens (match site-wide tokens exactly) ── */
         :root {
             --bg: #070707;
             --surface: #0e0e0e;
@@ -48,7 +46,6 @@
             font-size: 13px;
         }
 
-        /* ── Scanline Overlay ── */
         html::before {
             content: '';
             position: fixed;
@@ -73,7 +70,6 @@
             overflow-x: hidden;
         }
 
-        /* ── Animations ── */
         @keyframes glitch {
             0%, 88%, 100% { text-shadow: none; transform: translate(0); }
             89% { text-shadow: -4px 0 var(--red), 4px 0 var(--green); transform: translate(-3px, 1px); }
@@ -110,7 +106,6 @@
             100% { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0); }
         }
 
-        /* ── Header Bar ── */
         .top-bar {
             position: fixed;
             top: 0; left: 0; right: 0;
@@ -125,10 +120,8 @@
         .top-bar .brand  { color: var(--green); animation: glitch 4s infinite; }
         .top-bar .status { color: var(--green); animation: blink 1.4s step-end infinite; }
 
-        /* ── Main Container ── */
         .container { max-width: 720px; width: 100%; margin-top: 48px; text-align: center; }
 
-        /* ── Access Badge ── */
         .access-badge {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 6px 16px;
@@ -143,7 +136,6 @@
             animation: pulse 1s infinite;
         }
 
-        /* ── Hero Title ── */
         .hero-title {
             font-family: var(--display);
             font-size: clamp(64px, 16vw, 140px);
@@ -152,21 +144,18 @@
         }
         .hero-title .accent { color: var(--green); }
 
-        /* ── Subtitle ── */
         .subtitle {
             font-size: clamp(12px, 2vw, 15px); color: var(--muted);
             letter-spacing: 6px; margin: 16px 0 4px;
             animation: fadeInUp 1s ease both;
         }
 
-        /* ── Divider ── */
         .divider {
             width: 80px; height: 1px;
             background: var(--green); margin: 28px auto; opacity: 0.4;
             animation: fadeInUp 1.2s ease both;
         }
 
-        /* ── Info Blocks ── */
         .info-block {
             background: var(--surface); border: 1px solid var(--border);
             padding: 24px; margin: 20px 0; text-align: left;
@@ -185,7 +174,6 @@
             border-left: 2px solid var(--green); margin-top: 16px;
         }
 
-        /* ── Riddle Recap ── */
         .riddle-box {
             background: var(--card); border: 1px solid var(--dim);
             padding: 20px 24px; margin: 20px 0; text-align: left;
@@ -196,7 +184,6 @@
         .riddle-box .riddle-answer { margin-top: 14px; font-size: 11px; color: var(--muted); }
         .riddle-box .riddle-answer span { color: var(--green); }
 
-        /* ── Terminal Log ── */
         .terminal {
             background: var(--surface); border: 1px solid var(--border);
             padding: 16px 20px; margin: 20px 0; text-align: left;
@@ -208,10 +195,9 @@
         .terminal .line.warn { color: var(--amber); }
         .terminal .cursor-blink { animation: blink 1s step-end infinite; color: var(--green); }
 
-        /*GLITCH DECODE BLOCK */
         /*
            TRANSMISSION INTERCEPTED
-           env-dark     → background:#070707;          [dark mode active]
+           env-dark     → background:#070707;
            env-gradient → background:linear-gradient(135deg,#070707,#0d1a07,#070707,#1a0707);
            env-pixel    → image-rendering:pixelated; image-rendering:crisp-edges;
            REQUIREMENT: implement dark mode   
@@ -246,7 +232,6 @@
         .gl-cta     { font-size: 9px; letter-spacing: 3px; color: #333; text-transform: uppercase; }
         .gl-success { font-size: 9px; letter-spacing: 3px; color: var(--green); text-transform: uppercase; }
 
-        /* ── Back Button ── */
         .btn-back {
             display: inline-block; font-family: var(--mono);
             font-size: 10px; letter-spacing: 3px; padding: 12px 24px;
@@ -258,14 +243,12 @@
         }
         .btn-back:hover { background: var(--green); color: #000; }
 
-        /* ── Footer Hint ── */
         .footer-hint {
             margin-top: 48px; font-size: 9px; letter-spacing: 2px;
             color: var(--dim); line-height: 2.2;
             animation: fadeInUp 2.2s ease both;
         }
 
-        /* ── Background Grid Effect ── */
         .bg-grid {
             position: fixed; inset: 0;
             background-image:
@@ -275,10 +258,91 @@
             pointer-events: none; z-index: -1;
         }
 
-        /* ── Responsive ── */
         @media (max-width: 600px) {
             .container { margin-top: 56px; }
             .info-block, .riddle-box, .terminal { padding: 16px; }
+        }
+
+        .qr-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 28px 24px 34px;
+            margin: 24px 0 10px;
+            text-align: center;
+            animation: fadeInUp 2s ease both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(transparent 92%, rgba(57,255,20,0.035) 100%);
+            background-size: 100% 4px;
+            opacity: 0.25;
+            pointer-events: none;
+        }
+
+        .qr-label {
+            font-size: 9px;
+            letter-spacing: 4px;
+            color: var(--green);
+            margin-bottom: 22px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+
+        .qr-label::before { content: '▣'; }
+
+        .qr-box {
+            width: 190px;
+            height: 190px;
+            background: #fff;
+            padding: 10px;
+            border: 1px solid var(--dim);
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 0 0 0 1px rgba(57,255,20,0.05), 0 0 20px rgba(57,255,20,0.04);
+            overflow: hidden;
+        }
+
+        .qr-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 3px,
+                rgba(57,255,20,0.025) 4px
+            );
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        .qr-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            image-rendering: pixelated;
+            position: relative;
+            z-index: 2;
+        }
+
+        .qr-meta {
+            margin-top: 18px;
+            font-size: 9px;
+            letter-spacing: 3px;
+            color: var(--dim);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .qr-box { width: 150px; height: 150px; }
         }
     </style>
 </head>
@@ -365,6 +429,15 @@
             </div>
         </div>
         <!-- ── END GLITCH DECODE BLOCK ── -->
+
+        <!-- QR Audio Clue -->
+        <div class="qr-section">
+            <div class="qr-label">AUDIO FRAGMENT DETECTED</div>
+            <div class="qr-box">
+                <img src="/qr/spotify-doomsday.png" alt="Audio Fragment QR Code" />
+            </div>
+            <div class="qr-meta">SCAN IF YOU CAN</div>
+        </div>
 
         <a class="btn-back" href="../../index.html">← RETURN TO BROADCAST</a>
 

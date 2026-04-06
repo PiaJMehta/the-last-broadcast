@@ -7,6 +7,9 @@ import Rules from './components/Rules';
 import SurvivalStatus from './components/SurvivalStatus';
 import SystemLogs from './components/SystemLogs';
 import ProfileCard from './components/SurvivalChances';
+import Wordle from './hints/Wordle';
+import PressCounter from './hints/PressCounter';
+import TrollRiddles from './hints/TrollRiddles';
 
 function App() {
   const [view, setView] = useState('home');
@@ -30,11 +33,11 @@ function App() {
                   </h3>
                   <span className="text-[10px] opacity-40">SIGNAL_STRENGTH: 45%</span>
                 </div>
-                
+
                 <div className="glitch-border p-1 bg-green-500/5">
-                   <MapDisplay />
+                  <MapDisplay />
                 </div>
-                
+
                 <div className="flex justify-between mt-2 text-[10px] opacity-40 italic tracking-widest">
                   <span>[ COORDINATES: 12.9234° N, 77.5055° E ]</span>
                   <span>REF_FRAME: WGS-84</span>
@@ -54,10 +57,33 @@ function App() {
               </div>
             </section>
 
-            {/* 4.) checking survival chances - upon submission leads to the hint stored in local storage */}
+            {/* 4. SURVIVAL CHANCES */}
             <ProfileCard />
 
-            {/* 5. RULES SECTION */}
+            {/* 5. HINTS SECTION */}
+            <section className="max-w-7xl mx-auto px-10 pt-16 pb-20">
+              <div
+                style={{
+                  display: "flex",
+                  gap: "32px",
+                  marginBottom: "32px",
+                  alignItems: "flex-start",
+                  flexWrap: "wrap",
+                }}
+              >
+                <div style={{ flex: "1.25", minWidth: "420px" }}>
+                  <Wordle />
+                </div>
+
+                <div style={{ flex: "0.9", minWidth: "320px" }}>
+                  <PressCounter />
+                </div>
+              </div>
+
+              <TrollRiddles />
+            </section>
+
+            {/* 6. RULES SECTION */}
             <section className="border-t border-green-900/30 bg-green-900/5 pb-20">
               <div className="max-w-7xl mx-auto">
                 <Rules />
@@ -71,6 +97,7 @@ function App() {
         )}
       </main>
 
+       
       <Footer />
 
       {/* CRT Overlay */}
