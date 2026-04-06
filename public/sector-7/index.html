@@ -11,7 +11,6 @@
         href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Pixelify+Sans&display=swap"
         rel="stylesheet" />
     <style>
-        /* ── Reset ── */
         *,
         *::before,
         *::after {
@@ -20,7 +19,6 @@
             box-sizing: border-box;
         }
 
-        /* ── Design Tokens (match site-wide tokens exactly) ── */
         :root {
             --bg: #070707;
             --surface: #0e0e0e;
@@ -48,7 +46,6 @@
             font-size: 13px;
         }
 
-        /* ── Scanline Overlay ── */
         html::before {
             content: '';
             position: fixed;
@@ -73,402 +70,299 @@
             overflow-x: hidden;
         }
 
-        /* ── Animations ── */
         @keyframes glitch {
-
-            0%,
-            88%,
-            100% {
-                text-shadow: none;
-                transform: translate(0);
-            }
-
-            89% {
-                text-shadow: -4px 0 var(--red), 4px 0 var(--green);
-                transform: translate(-3px, 1px);
-            }
-
-            91% {
-                text-shadow: 4px 0 var(--red), -4px 0 var(--green);
-                transform: translate(3px, -1px);
-            }
-
-            93% {
-                text-shadow: none;
-                transform: translate(0);
-            }
+            0%, 88%, 100% { text-shadow: none; transform: translate(0); }
+            89% { text-shadow: -4px 0 var(--red), 4px 0 var(--green); transform: translate(-3px, 1px); }
+            91% { text-shadow: 4px 0 var(--red), -4px 0 var(--green); transform: translate(3px, -1px); }
+            93% { text-shadow: none; transform: translate(0); }
         }
 
         @keyframes glitchHard {
-
-            0%,
-            80% {
-                text-shadow: none;
-                transform: translate(0) skewX(0deg);
-                opacity: 1;
-            }
-
-            81% {
-                text-shadow: -6px 0 var(--red), 6px 0 var(--green);
-                transform: translate(-5px, 2px) skewX(-2deg);
-                opacity: 0.9;
-            }
-
-            84% {
-                text-shadow: 5px 0 var(--red), -5px 0 var(--green);
-                transform: translate(4px, -2px) skewX(3deg);
-                opacity: 1;
-            }
-
-            86% {
-                text-shadow: -3px 0 var(--green);
-                transform: translate(-2px, 0) skewX(-1deg);
-                opacity: 0.95;
-            }
-
-            88% {
-                text-shadow: none;
-                transform: translate(0) skewX(0deg);
-                opacity: 1;
-            }
+            0%, 80% { text-shadow: none; transform: translate(0) skewX(0deg); opacity: 1; }
+            81% { text-shadow: -6px 0 var(--red), 6px 0 var(--green); transform: translate(-5px, 2px) skewX(-2deg); opacity: 0.9; }
+            84% { text-shadow: 5px 0 var(--red), -5px 0 var(--green); transform: translate(4px, -2px) skewX(3deg); opacity: 1; }
+            86% { text-shadow: -3px 0 var(--green); transform: translate(-2px, 0) skewX(-1deg); opacity: 0.95; }
+            88% { text-shadow: none; transform: translate(0) skewX(0deg); opacity: 1; }
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes blink {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0;
-            }
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0; }
         }
 
         @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 0.4;
-            }
-
-            50% {
-                opacity: 1;
-            }
+            0%, 100% { opacity: 0.4; }
+            50%       { opacity: 1; }
         }
 
         @keyframes scanPulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.3);
-            }
-
-            70% {
-                box-shadow: 0 0 0 12px rgba(57, 255, 20, 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(57, 255, 20, 0);
-            }
+            0%   { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.3); }
+            70%  { box-shadow: 0 0 0 12px rgba(57, 255, 20, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0); }
         }
 
-        @keyframes typewriter {
-            from {
-                width: 0;
-            }
-
-            to {
-                width: 100%;
-            }
-        }
-
-        /* ── Header Bar ── */
         .top-bar {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 36px;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between;
             padding: 0 20px;
-            font-size: 10px;
-            letter-spacing: 2px;
-            color: var(--muted);
+            font-size: 10px; letter-spacing: 2px; color: var(--muted);
             z-index: 100;
         }
+        .top-bar .brand  { color: var(--green); animation: glitch 4s infinite; }
+        .top-bar .status { color: var(--green); animation: blink 1.4s step-end infinite; }
 
-        .top-bar .brand {
-            color: var(--green);
-            animation: glitch 4s infinite;
-        }
+        .container { max-width: 720px; width: 100%; margin-top: 48px; text-align: center; }
 
-        .top-bar .status {
-            color: var(--green);
-            animation: blink 1.4s step-end infinite;
-        }
-
-        /* ── Main Container ── */
-        .container {
-            max-width: 720px;
-            width: 100%;
-            margin-top: 48px;
-            text-align: center;
-        }
-
-        /* ── Access Badge ── */
         .access-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            display: inline-flex; align-items: center; gap: 8px;
             padding: 6px 16px;
-            border: 1px solid var(--green);
-            color: var(--green);
-            font-size: 10px;
-            letter-spacing: 3px;
+            border: 1px solid var(--green); color: var(--green);
+            font-size: 10px; letter-spacing: 3px;
             margin-bottom: 32px;
             animation: fadeInUp 0.6s ease both, scanPulse 2s infinite;
         }
-
         .access-badge .dot {
-            width: 6px;
-            height: 6px;
-            background: var(--green);
-            border-radius: 50%;
+            width: 6px; height: 6px;
+            background: var(--green); border-radius: 50%;
             animation: pulse 1s infinite;
         }
 
-        /* ── Hero Title ── */
         .hero-title {
             font-family: var(--display);
             font-size: clamp(64px, 16vw, 140px);
-            color: var(--head);
-            line-height: 0.9;
-            letter-spacing: 4px;
+            color: var(--head); line-height: 0.9; letter-spacing: 4px;
             animation: glitchHard 3s infinite, fadeInUp 0.8s ease both;
         }
+        .hero-title .accent { color: var(--green); }
 
-        .hero-title .accent {
-            color: var(--green);
-        }
-
-        /* ── Subtitle ── */
         .subtitle {
-            font-size: clamp(12px, 2vw, 15px);
-            color: var(--muted);
-            letter-spacing: 6px;
-            margin: 16px 0 4px;
+            font-size: clamp(12px, 2vw, 15px); color: var(--muted);
+            letter-spacing: 6px; margin: 16px 0 4px;
             animation: fadeInUp 1s ease both;
         }
 
-        /* ── Divider ── */
         .divider {
-            width: 80px;
-            height: 1px;
-            background: var(--green);
-            margin: 28px auto;
-            opacity: 0.4;
+            width: 80px; height: 1px;
+            background: var(--green); margin: 28px auto; opacity: 0.4;
             animation: fadeInUp 1.2s ease both;
         }
 
-        /* ── Info Blocks ── */
         .info-block {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 24px;
-            margin: 20px 0;
-            text-align: left;
+            background: var(--surface); border: 1px solid var(--border);
+            padding: 24px; margin: 20px 0; text-align: left;
             animation: fadeInUp 1.4s ease both;
         }
-
         .info-block .label {
-            font-size: 9px;
-            letter-spacing: 3px;
-            color: var(--green);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            font-size: 9px; letter-spacing: 3px; color: var(--green);
+            margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
         }
-
-        .info-block .label::before {
-            content: '▸';
-        }
-
-        .info-block p {
-            font-size: 12px;
-            color: var(--light);
-            line-height: 2;
-        }
-
+        .info-block .label::before { content: '▸'; }
+        .info-block p { font-size: 12px; color: var(--light); line-height: 2; }
         .info-block .req {
-            color: var(--green);
-            font-size: 13px;
-            letter-spacing: 1px;
+            color: var(--green); font-size: 13px; letter-spacing: 1px;
             padding: 12px 16px;
             background: rgba(57, 255, 20, 0.04);
-            border-left: 2px solid var(--green);
-            margin-top: 16px;
+            border-left: 2px solid var(--green); margin-top: 16px;
         }
 
-        /* ── Riddle Recap ── */
         .riddle-box {
-            background: var(--card);
-            border: 1px solid var(--dim);
-            padding: 20px 24px;
-            margin: 20px 0;
-            text-align: left;
+            background: var(--card); border: 1px solid var(--dim);
+            padding: 20px 24px; margin: 20px 0; text-align: left;
             animation: fadeInUp 1.6s ease both;
         }
+        .riddle-box .riddle-label  { font-size: 9px; letter-spacing: 3px; color: var(--amber); margin-bottom: 10px; }
+        .riddle-box .riddle-text   { font-size: 12px; color: var(--light); font-style: italic; line-height: 1.8; padding-left: 12px; border-left: 2px solid var(--amber); }
+        .riddle-box .riddle-answer { margin-top: 14px; font-size: 11px; color: var(--muted); }
+        .riddle-box .riddle-answer span { color: var(--green); }
 
-        .riddle-box .riddle-label {
-            font-size: 9px;
-            letter-spacing: 3px;
-            color: var(--amber);
-            margin-bottom: 10px;
-        }
-
-        .riddle-box .riddle-text {
-            font-size: 12px;
-            color: var(--light);
-            font-style: italic;
-            line-height: 1.8;
-            padding-left: 12px;
-            border-left: 2px solid var(--amber);
-        }
-
-        .riddle-box .riddle-answer {
-            margin-top: 14px;
-            font-size: 11px;
-            color: var(--muted);
-        }
-
-        .riddle-box .riddle-answer span {
-            color: var(--green);
-        }
-
-        /* ── Terminal Log ── */
         .terminal {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 16px 20px;
-            margin: 20px 0;
-            text-align: left;
-            font-size: 11px;
-            line-height: 2.2;
+            background: var(--surface); border: 1px solid var(--border);
+            padding: 16px 20px; margin: 20px 0; text-align: left;
+            font-size: 11px; line-height: 2.2;
             animation: fadeInUp 1.8s ease both;
         }
+        .terminal .line      { color: var(--dim); }
+        .terminal .line.ok   { color: var(--green); }
+        .terminal .line.warn { color: var(--amber); }
+        .terminal .cursor-blink { animation: blink 1s step-end infinite; color: var(--green); }
 
-        .terminal .line {
-            color: var(--dim);
+        /*
+           TRANSMISSION INTERCEPTED
+           env-dark     → background:#070707;
+           env-gradient → background:linear-gradient(135deg,#070707,#0d1a07,#070707,#1a0707);
+           env-pixel    → image-rendering:pixelated; image-rendering:crisp-edges;
+           REQUIREMENT: implement dark mode   
+           REQUIREMENT: use CSS gradients     
+           REQUIREMENT: pixelated images      */
+        .gl-block-wrap {
+            margin: 20px 0;
+            text-align: left;
+            animation: fadeInUp 1.9s ease both;
         }
-
-        .terminal .line.ok {
-            color: var(--green);
+        .gl-block-label {
+            font-size: 9px; letter-spacing: 3px; color: var(--dim);
+            margin-bottom: 8px;
         }
-
-        .terminal .line.warn {
-            color: var(--amber);
+        .gl-decode-block {
+            border: 1px solid #222; padding: 16px 18px;
+            cursor: crosshair; display: flex; flex-direction: column;
+            align-items: flex-start; gap: 10px; background: #0a0a0a;
+            transition: border-color .2s, box-shadow .2s; user-select: none;
         }
-
-        .terminal .cursor-blink {
-            animation: blink 1s step-end infinite;
-            color: var(--green);
+        .gl-decode-block:hover,
+        .gl-decode-block.decoding { border-color: var(--red); box-shadow: 0 0 10px rgba(255,42,31,.08); }
+        .gl-decode-block.decoded  { border-color: var(--green); box-shadow: 0 0 10px rgba(57,255,20,.08); }
+        .gl-code-text {
+            font-size: 11px; letter-spacing: .1em; color: var(--muted);
+            word-break: break-all; line-height: 1.75; transition: color .3s; width: 100%;
         }
+        .gl-decode-block.decoded .gl-code-text { color: var(--green); }
+        .gl-progress-wrap { width: 100%; height: 1px; background: var(--dim); overflow: hidden; }
+        .gl-progress-bar  { height: 100%; background: var(--red); width: 0%; transition: width .04s linear; }
+        .gl-decode-block.decoded .gl-progress-bar { background: var(--green); width: 100%; }
+        .gl-cta     { font-size: 9px; letter-spacing: 3px; color: #333; text-transform: uppercase; }
+        .gl-success { font-size: 9px; letter-spacing: 3px; color: var(--green); text-transform: uppercase; }
 
-        /* ── Back Button ── */
         .btn-back {
-            display: inline-block;
-            font-family: var(--mono);
-            font-size: 10px;
-            letter-spacing: 3px;
-            padding: 12px 24px;
-            border: 1px solid var(--green);
-            color: var(--green);
-            text-decoration: none;
-            cursor: crosshair;
+            display: inline-block; font-family: var(--mono);
+            font-size: 10px; letter-spacing: 3px; padding: 12px 24px;
+            border: 1px solid var(--green); color: var(--green);
+            text-decoration: none; cursor: crosshair;
             transition: background 0.2s, color 0.2s;
             margin-top: 32px;
             animation: fadeInUp 2s ease both;
         }
+        .btn-back:hover { background: var(--green); color: #000; }
 
-        .btn-back:hover {
-            background: var(--green);
-            color: #000;
-        }
-
-        /* ── Footer Hint ── */
         .footer-hint {
-            margin-top: 48px;
-            font-size: 9px;
-            letter-spacing: 2px;
-            color: var(--dim);
-            line-height: 2.2;
+            margin-top: 48px; font-size: 9px; letter-spacing: 2px;
+            color: var(--dim); line-height: 2.2;
             animation: fadeInUp 2.2s ease both;
         }
 
-        /* ── Background Grid Effect ── */
         .bg-grid {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background-image:
                 linear-gradient(rgba(57, 255, 20, 0.015) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(57, 255, 20, 0.015) 1px, transparent 1px);
             background-size: 40px 40px;
-            pointer-events: none;
-            z-index: -1;
+            pointer-events: none; z-index: -1;
         }
 
-        /* ── Responsive ── */
         @media (max-width: 600px) {
-            .container {
-                margin-top: 56px;
-            }
+            .container { margin-top: 56px; }
+            .info-block, .riddle-box, .terminal { padding: 16px; }
+        }
 
-            .info-block,
-            .riddle-box,
-            .terminal {
-                padding: 16px;
-            }
+        .qr-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 28px 24px 34px;
+            margin: 24px 0 10px;
+            text-align: center;
+            animation: fadeInUp 2s ease both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(transparent 92%, rgba(57,255,20,0.035) 100%);
+            background-size: 100% 4px;
+            opacity: 0.25;
+            pointer-events: none;
+        }
+
+        .qr-label {
+            font-size: 9px;
+            letter-spacing: 4px;
+            color: var(--green);
+            margin-bottom: 22px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+
+        .qr-label::before { content: '▣'; }
+
+        .qr-box {
+            width: 190px;
+            height: 190px;
+            background: #fff;
+            padding: 10px;
+            border: 1px solid var(--dim);
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 0 0 0 1px rgba(57,255,20,0.05), 0 0 20px rgba(57,255,20,0.04);
+            overflow: hidden;
+        }
+
+        .qr-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 3px,
+                rgba(57,255,20,0.025) 4px
+            );
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        .qr-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            image-rendering: pixelated;
+            position: relative;
+            z-index: 2;
+        }
+
+        .qr-meta {
+            margin-top: 18px;
+            font-size: 9px;
+            letter-spacing: 3px;
+            color: var(--dim);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .qr-box { width: 150px; height: 150px; }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Background grid -->
     <div class="bg-grid"></div>
 
-    <!-- Top bar -->
     <div class="top-bar">
         <span class="brand">THE LAST BROADCAST</span>
         <span class="status">● SECTOR_7 ACTIVE</span>
     </div>
 
-    <!-- Main content -->
     <div class="container">
 
-        <!-- Access badge -->
         <div class="access-badge">
             <span class="dot"></span>
             CLEARANCE GRANTED — SECTOR 7
         </div>
 
-        <!-- Hero -->
         <h1 class="hero-title">
             YOU FOUND <span class="accent">IT.</span>
         </h1>
@@ -476,7 +370,6 @@
 
         <div class="divider"></div>
 
-        <!-- Requirement reveal -->
         <div class="info-block">
             <div class="label">DECODED TRANSMISSION</div>
             <p>
@@ -491,9 +384,19 @@
             </div>
         </div>
 
+        <div class="info-block">
+            <div class="label">NEXT TRANSMISSION</div>
+            <p>
+                You've proven you can find what's hidden.<br>
+                Now make sure the lost can find their way back.
+            </p>
+            <div class="req">
+                REQUIREMENT: Add a custom error 404 page to your website.<br>
+                When a user visits a broken or unknown link, they should see a styled<br>
+                "not found" page — not the browser default.
+            </div>
+        </div>
 
-
-        <!-- Riddle recap -->
         <div class="riddle-box">
             <div class="riddle-label">// HOW YOU GOT HERE</div>
             <div class="riddle-text">
@@ -506,7 +409,6 @@
             </div>
         </div>
 
-        <!-- Terminal log -->
         <div class="terminal">
             <div class="line ok">&gt; SECTOR_7 ACCESS VERIFIED</div>
             <div class="line ok">&gt; DECRYPTION KEY MATCHED</div>
@@ -516,10 +418,29 @@
             <div class="line"><span class="cursor-blink">█</span></div>
         </div>
 
-        <!-- Back button -->
+        <!-- ── GLITCH DECODE BLOCK ── -->
+        <div class="gl-block-wrap">
+            <div class="gl-block-label">// INTERCEPTED SIGNAL</div>
+            <div class="gl-decode-block" id="gl-block"
+                onmouseenter="glStartDecode()" onmouseleave="glStopDecode()">
+                <span class="gl-code-text" id="gl-text">YOU CAN READ IT, IF YOU COULD JUST STAY STILL...</span>
+                <div class="gl-progress-wrap"><div class="gl-progress-bar" id="gl-bar"></div></div>
+                <span class="gl-cta" id="gl-cta">[ HOVER TO DECODE ]</span>
+            </div>
+        </div>
+        <!-- ── END GLITCH DECODE BLOCK ── -->
+
+        <!-- QR Audio Clue -->
+        <div class="qr-section">
+            <div class="qr-label">AUDIO FRAGMENT DETECTED</div>
+            <div class="qr-box">
+                <img src="/qr/spotify-doomsday.png" alt="Audio Fragment QR Code" />
+            </div>
+            <div class="qr-meta">SCAN IF YOU CAN</div>
+        </div>
+
         <a class="btn-back" href="../../index.html">← RETURN TO BROADCAST</a>
 
-        <!-- Footer -->
         <div class="footer-hint">
             // sector-7: classified<br>
             // you were not supposed to find this<br>
@@ -527,6 +448,80 @@
         </div>
 
     </div>
+
+    <script>
+        const GLITCH_CHARS  = '!@#$%^&*<>/?\\|█▓▒░╗╔╝╚═║';
+        const GLITCH_TARGET = 'IMPLEMENT → GLITCH TEXT ANIMATION :: FEATURE UNLOCKED';
+        const GLITCH_IDLE   = 'YOU CAN READ IT, IF YOU COULD JUST STAY STILL...';
+        let glDecoded = false, glDecoding = false, glProgress = 0;
+        let glDecodeInterval = null, glPassiveInterval = null;
+
+        function glStartPassive() {
+            if (glPassiveInterval) return;
+            glPassiveInterval = setInterval(() => {
+                if (glDecoding || glDecoded) return;
+                const el = document.getElementById('gl-text');
+                if (!el) return;
+                el.textContent = GLITCH_IDLE.split('').map(c =>
+                    c !== ' ' && Math.random() < 0.07
+                        ? GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)] : c
+                ).join('');
+            }, 90);
+        }
+
+        function glScramble(prog) {
+            return GLITCH_TARGET.split('').map((c, i) => {
+                if (c === ' ' || c === '→') return c;
+                return prog >= i / GLITCH_TARGET.length
+                    ? c : GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+            }).join('');
+        }
+
+        function glStartDecode() {
+            if (glDecoded) return;
+            clearInterval(glPassiveInterval); glPassiveInterval = null;
+            glDecoding = true; glProgress = 0;
+            const block = document.getElementById('gl-block');
+            if (block) block.classList.add('decoding');
+            const cta = document.getElementById('gl-cta');
+            if (cta) cta.textContent = 'DECODING...';
+            glDecodeInterval = setInterval(() => {
+                glProgress += 0.018;
+                const el  = document.getElementById('gl-text');
+                const bar = document.getElementById('gl-bar');
+                if (glProgress >= 1) {
+                    clearInterval(glDecodeInterval);
+                    if (el)  el.textContent = GLITCH_TARGET;
+                    if (bar) bar.style.width = '100%';
+                    const b = document.getElementById('gl-block');
+                    if (b) { b.classList.remove('decoding'); b.classList.add('decoded'); }
+                    const c = document.getElementById('gl-cta');
+                    if (c)  { c.textContent = '✓ TRANSMISSION RECOVERED'; c.className = 'gl-success'; }
+                    glDecoded = true; glDecoding = false;
+                    return;
+                }
+                if (el)  el.textContent = glScramble(glProgress);
+                if (bar) bar.style.width = (glProgress * 100) + '%';
+            }, 40);
+        }
+
+        function glStopDecode() {
+            if (glDecoded) return;
+            clearInterval(glDecodeInterval);
+            glDecoding = false; glProgress = 0;
+            const block = document.getElementById('gl-block');
+            const bar   = document.getElementById('gl-bar');
+            const el    = document.getElementById('gl-text');
+            const cta   = document.getElementById('gl-cta');
+            if (block) block.classList.remove('decoding');
+            if (bar)   bar.style.width = '0%';
+            if (el)    el.textContent = GLITCH_IDLE;
+            if (cta)   cta.textContent = '[ HOVER TO DECODE ]';
+            glStartPassive();
+        }
+
+        glStartPassive();
+    </script>
 
 </body>
 
