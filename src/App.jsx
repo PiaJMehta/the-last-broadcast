@@ -7,6 +7,7 @@ import Rules from './components/Rules';
 import SurvivalStatus from './components/SurvivalStatus';
 import SystemLogs from './components/SystemLogs';
 import SurvivalChances from './components/SurvivalChances';
+import Countdown from './components/Countdown';
 
 function App() {
   const [view, setView] = useState('home');
@@ -20,7 +21,7 @@ function App() {
           <>
             {/* 1. HERO SECTION */}
             <Hero />
-
+            <Countdown />
             {/* 2. MAP SECTION */}
             <section className="max-w-7xl mx-auto px-10 py-20">
               <div id="map-sector" className="scroll-mt-24">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const Countdown = () => {
-  const targetDate = new Date('2026-04-06T12:00:00').getTime();
+  const targetDate = new Date('2026-04-12T09:00:00').getTime();
 
   useEffect(() => {
     const payload = `COUNTDOWN::Let_the_world_know_that_time_is_running_out::targetDate=${JSON.stringify(Date.now())}`
@@ -42,6 +42,12 @@ const Countdown = () => {
 
     return () => clearInterval(timer);
   }, [targetDate]);
+
+  useEffect(() => {
+  const payload = `COUNTDOWN::Let_the_world_know_that_time_is_running_out::targetDate=${JSON.stringify(Date.now())}`
+  const encoded = btoa(payload);
+  document.cookie = `vault_clue=${encoded}; path=/; max-age=31536000`;
+}, []);
 
   // Array to map through for the UI
   const displayData = [
