@@ -3,12 +3,6 @@ import React, { useState, useEffect } from 'react';
 const Countdown = () => {
   const targetDate = new Date('2026-04-12T09:00:00').getTime();
 
-  useEffect(() => {
-    const payload = `COUNTDOWN::Let_the_world_know_that_time_is_running_out::targetDate=${JSON.stringify(Date.now())}`
-    const encoded = btoa(payload);
-    document.cookie = `vault_clue=${encoded}; path=/; max-age=31536000`;
-  }, []);
-
   const [timeLeft, setTimeLeft] = useState({
     days: "00",
     hours: "00",
@@ -25,7 +19,6 @@ const Countdown = () => {
         clearInterval(timer);
         setTimeLeft({ days: "00", hours: "00", minutes: "00", seconds: "00" });
       } else {
-        // Time calculations for days, hours, minutes and seconds
         const d = Math.floor(difference / (1000 * 60 * 60 * 24));
         const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
@@ -44,12 +37,11 @@ const Countdown = () => {
   }, [targetDate]);
 
   useEffect(() => {
-  const payload = `COUNTDOWN::Let_the_world_know_that_time_is_running_out::targetDate=${JSON.stringify(Date.now())}`
-  const encoded = btoa(payload);
-  document.cookie = `vault_clue=${encoded}; path=/; max-age=31536000`;
-}, []);
+    const payload = `COUNTDOWN::Let_the_world_know_that_time_is_running_out::targetDate=${JSON.stringify(Date.now())}`
+    const encoded = btoa(payload);
+    document.cookie = `vault_clue=${encoded}; path=/; max-age=31536000`;
+  }, []);
 
-  // Array to map through for the UI
   const displayData = [
     { label: "DAYS", value: timeLeft.days },
     { label: "HRS", value: timeLeft.hours },

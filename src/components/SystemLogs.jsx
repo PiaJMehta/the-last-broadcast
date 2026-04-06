@@ -16,18 +16,18 @@ const SystemLogs = () => {
     "> PACKET_LOSS_78%",
     "> WARNING: THERMAL_OVERLOAD",
     "> BROADCAST_RELAY_OFFLINE",
-    "> CLUE_FOUND: THE_VAULT_IS_OPEN" 
+    "> CLUE_FOUND: THE_VAULT_IS_OPEN"
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       const randomLog = rawLogs[Math.floor(Math.random() * rawLogs.length)];
-      setLogs(prev => [...prev.slice(-5), randomLog]); 
+      setLogs(prev => [...prev.slice(-5), randomLog]);
     }, 2000);
     return () => clearInterval(interval);
   }, []);
 
-return (
+  return (
     <>
       <div className="border border-green-900 p-4 bg-black/60 h-48 overflow-hidden font-mono text-[9px] leading-tight">
         <div className="text-green-500/30 mb-2">// REMOTE_CONSOLE_ACCESS</div>
@@ -38,6 +38,7 @@ return (
             </div>
           ))}
           <div className="w-2 h-4 bg-green-500 animate-pulse inline-block"></div>
+          <div data-signal="QSByb3RhdGluZyBzaWduIG9mIGxpZmUgaXMgYmV0dGVyIHRoYW4gc2lsZW5jZQ==" className="hidden"></div>
         </div>
       </div>
       <div className="mt-4 text-center">
@@ -48,6 +49,5 @@ return (
     </>
   );
 };
-
 
 export default SystemLogs;
