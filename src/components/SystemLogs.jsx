@@ -16,7 +16,8 @@ const SystemLogs = () => {
     "> PACKET_LOSS_78%",
     "> WARNING: THERMAL_OVERLOAD",
     "> BROADCAST_RELAY_OFFLINE",
-    "> CLUE_FOUND: THE_VAULT_IS_OPEN" 
+    "> CLUE_FOUND: THE_VAULT_IS_OPEN"
+    
   ];
 
   useEffect(() => {
@@ -37,6 +38,7 @@ const SystemLogs = () => {
           </div>
         ))}
         <div className="w-2 h-4 bg-green-500 animate-pulse inline-block"></div>
+        <div data-signal="QSByb3RhdGluZyBzaWduIG9mIGxpZmUgaXMgYmV0dGVyIHRoYW4gc2lsZW5jZQ==" className="hidden"></div>
       </div>
     </div>
     <div className="mt-4 text-center">
