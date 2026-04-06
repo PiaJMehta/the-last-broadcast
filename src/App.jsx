@@ -97,6 +97,7 @@ function App() {
         )}
       </main>
 
+       
       <Footer />
 
       {/* CRT Overlay */}
