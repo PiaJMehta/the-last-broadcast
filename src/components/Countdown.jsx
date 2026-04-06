@@ -52,17 +52,22 @@ const Countdown = () => {
   ];
 
   return (
-    <div className="flex gap-2 justify-center py-4">
-      {displayData.map((item, i) => (
-        <div key={i} className="flex flex-col items-center">
-          <div className="text-4xl font-bold px-3 py-2 bg-green-500/10 border border-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.2)] text-green-500">
-            {item.value}
+    <div className='flex flex-col gap-2 justify-center items-center py-4'>
+      <div className="flex gap-2 justify-center py-4">
+        {displayData.map((item, i) => (
+          <div key={i} className="flex flex-col items-center">
+            <div className="text-4xl font-bold px-3 py-2 bg-green-500/10 border border-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.2)] text-green-500">
+              {item.value}
+            </div>
+            <span className="text-[8px] mt-1 opacity-50 font-bold tracking-tighter">
+              {item.label}
+            </span>
           </div>
-          <span className="text-[8px] mt-1 opacity-50 font-bold tracking-tighter">
-            {item.label}
-          </span>
-        </div>
-      ))}
+        ))}
+      </div>
+      <p className="text-center text-[10px] opacity-10 animation-pulse font-bold tracking-widest">
+        S3CT0R-?_L13S_B3Y0ND_TH3_S3V3NTH_M0NTH
+      </p>
     </div>
   );
 };
