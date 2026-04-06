@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../../glitch-clue.css';
 
 const SystemLogs = () => {
   const [logs, setLogs] = useState([
@@ -27,7 +28,7 @@ const SystemLogs = () => {
   }, []);
 
   return (
-    <div>
+    <>
       <div className="border border-green-900 p-4 bg-black/60 h-48 overflow-hidden font-mono text-[9px] leading-tight">
         <div className="text-green-500/30 mb-2">// REMOTE_CONSOLE_ACCESS</div>
         <div className="space-y-1">
@@ -45,7 +46,7 @@ const SystemLogs = () => {
           SIGNAL_CORRUPTION_DETECTED
         </h2>
       </div>
-    </div>
+    </>
   );
 };
 
