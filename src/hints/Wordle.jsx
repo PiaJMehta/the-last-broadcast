@@ -3,9 +3,7 @@ import { useEffect, useState } from "react";
 const TARGET = "INSTA";
 const MAX_ROWS = 6;
 const MAX_COLS = 5;
-const KEY_SOLVED = "hint_wordle_insta_solved";
-const KEY_FAILED = "hint_wordle_insta_failed";
-const KEY_BOARD = "hint_wordle_insta_board";
+const STORAGE_KEY = "wordle_progress_v2";
 
 const keyboardRows = [
   ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
@@ -18,6 +16,7 @@ function getGuessStatus(guess, target) {
   const targetArr = target.split("");
   const guessArr = guess.split("");
 
+  // First pass: correct letters
   for (let i = 0; i < MAX_COLS; i++) {
     if (guessArr[i] === targetArr[i]) {
       result[i] = "correct";
@@ -26,6 +25,7 @@ function getGuessStatus(guess, target) {
     }
   }
 
+  // Second pass: present letters
   for (let i = 0; i < MAX_COLS; i++) {
     if (guessArr[i] && targetArr.includes(guessArr[i])) {
       result[i] = "present";
@@ -40,11 +40,14 @@ function buildKeyStates(guesses, statuses) {
   const priority = { correct: 3, present: 2, absent: 1 };
   const states = {};
 
-  guesses.forEach((g, r) => {
-    if (!statuses[r]) return;
-    g.split("").forEach((l, c) => {
-      const s = statuses[r][c];
-      if (!states[l] || priority[s] > priority[states[l]]) states[l] = s;
+  guesses.forEach((guess, rowIndex) => {
+    if (!statuses[rowIndex]) return;
+
+    guess.split("").forEach((letter, colIndex) => {
+      const status = statuses[rowIndex][colIndex];
+      if (!states[letter] || priority[status] > priority[states[letter]]) {
+        states[letter] = status;
+      }
     });
   });
 
@@ -59,48 +62,60 @@ export default function Wordle() {
   const [solved, setSolved] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [keyStates, setKeyStates] = useState({});
+  const [loaded, setLoaded] = useState(false);
 
+  // Load saved progress ONCE
   useEffect(() => {
-    const wasSolved = localStorage.getItem(KEY_SOLVED) === "true";
-    const wasFailed = localStorage.getItem(KEY_FAILED) === "true";
-    if (!wasSolved && !wasFailed) return;
+    const saved = localStorage.getItem(STORAGE_KEY);
 
-    let savedGuesses = Array(MAX_ROWS).fill("");
-    let savedStatuses = Array(MAX_ROWS).fill(null);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
 
-    try {
-      const parsed = JSON.parse(localStorage.getItem(KEY_BOARD) || "{}");
-      savedGuesses = parsed.guesses || savedGuesses;
-      savedStatuses = parsed.statuses || savedStatuses;
-    } catch (_) {}
+        const loadedGuesses = parsed.guesses || Array(MAX_ROWS).fill("");
+        const loadedStatuses = parsed.statuses || Array(MAX_ROWS).fill(null);
 
-    setGuesses(savedGuesses);
-    setStatuses(savedStatuses);
-    setKeyStates(buildKeyStates(savedGuesses, savedStatuses));
-    setGameOver(true);
-
-    if (wasSolved) {
-      setSolved(true);
-      const winRow = savedGuesses.findIndex((g) => g === TARGET);
-      setCurrentRow(winRow >= 0 ? winRow + 1 : MAX_ROWS);
-    } else {
-      setSolved(false);
-      setCurrentRow(MAX_ROWS);
+        setGuesses(loadedGuesses);
+        setStatuses(loadedStatuses);
+        setCurrentRow(parsed.currentRow ?? 0);
+        setCurrentGuess(parsed.currentGuess ?? "");
+        setSolved(parsed.solved ?? false);
+        setGameOver(parsed.gameOver ?? false);
+        setKeyStates(buildKeyStates(loadedGuesses, loadedStatuses));
+      } catch (err) {
+        console.error("Failed to load Wordle progress:", err);
+      }
     }
+
+    setLoaded(true);
   }, []);
 
-  const persistBoard = (g, s) => {
-    localStorage.setItem(KEY_BOARD, JSON.stringify({ guesses: g, statuses: s }));
-  };
+  // Save progress ONLY after load is complete
+  useEffect(() => {
+    if (!loaded) return;
+
+    const progress = {
+      guesses,
+      statuses,
+      currentRow,
+      currentGuess,
+      solved,
+      gameOver,
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+  }, [guesses, statuses, currentRow, currentGuess, solved, gameOver, loaded]);
 
   const updateKeyStates = (guess, guessStatus) => {
     const priority = { correct: 3, present: 2, absent: 1 };
     const next = { ...keyStates };
 
     for (let i = 0; i < guess.length; i++) {
-      const l = guess[i];
-      const s = guessStatus[i];
-      if (!next[l] || priority[s] > priority[next[l]]) next[l] = s;
+      const letter = guess[i];
+      const status = guessStatus[i];
+      if (!next[letter] || priority[status] > priority[next[letter]]) {
+        next[letter] = status;
+      }
     }
 
     setKeyStates(next);
@@ -119,22 +134,19 @@ export default function Wordle() {
     setGuesses(newGuesses);
     setStatuses(newStatuses);
     updateKeyStates(currentGuess, guessStatus);
-    persistBoard(newGuesses, newStatuses);
 
     if (currentGuess === TARGET) {
       setSolved(true);
       setGameOver(true);
-      localStorage.setItem(KEY_SOLVED, "true");
       return;
     }
 
     if (currentRow === MAX_ROWS - 1) {
       setGameOver(true);
-      localStorage.setItem(KEY_FAILED, "true");
       return;
     }
 
-    setCurrentRow(currentRow + 1);
+    setCurrentRow((prev) => prev + 1);
     setCurrentGuess("");
   };
 
@@ -142,7 +154,7 @@ export default function Wordle() {
     if (gameOver) return;
 
     if (key === "⌫") {
-      setCurrentGuess((p) => p.slice(0, -1));
+      setCurrentGuess((prev) => prev.slice(0, -1));
       return;
     }
 
@@ -152,7 +164,7 @@ export default function Wordle() {
     }
 
     if (/^[A-Z]$/.test(key) && currentGuess.length < MAX_COLS) {
-      setCurrentGuess((p) => p + key);
+      setCurrentGuess((prev) => prev + key);
     }
   };
 
@@ -161,23 +173,31 @@ export default function Wordle() {
       if (e.key === "Backspace") return handleKey("⌫");
       if (e.key === "Enter") return handleKey("↵");
 
-      const l = e.key.toUpperCase();
-      if (/^[A-Z]$/.test(l)) handleKey(l);
+      const key = e.key.toUpperCase();
+      if (/^[A-Z]$/.test(key)) handleKey(key);
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [currentGuess, currentRow, gameOver, keyStates]);
+  }, [currentGuess, gameOver, currentRow, guesses]);
 
-  const getCellContent = (r, c) => {
-    if (r < currentRow || (r === currentRow && gameOver && r < MAX_ROWS)) {
-      return guesses[r]?.[c] || "";
+  const getCellContent = (row, col) => {
+    // If row already submitted, always show saved guess
+    if (guesses[row]) {
+      return guesses[row][col] || "";
     }
-    if (r === currentRow && !gameOver) return currentGuess[c] || "";
+
+    // If current active row, show typed guess
+    if (row === currentRow && !gameOver) {
+      return currentGuess[col] || "";
+    }
+
     return "";
   };
 
-  const getCellStatus = (r, c) => statuses[r]?.[c] ?? null;
+  const getCellStatus = (row, col) => {
+    return statuses[row]?.[col] ?? null;
+  };
 
   const cellStyle = (status, filled) => {
     const base = {
@@ -195,37 +215,41 @@ export default function Wordle() {
       flexShrink: 0,
     };
 
-    if (status === "correct")
+    if (status === "correct") {
       return {
         ...base,
         borderColor: "#39ff14",
         background: "rgba(57,255,20,.08)",
         color: "#39ff14",
       };
+    }
 
-    if (status === "present")
+    if (status === "present") {
       return {
         ...base,
         borderColor: "#c8a000",
         background: "rgba(200,160,0,.08)",
         color: "#c8a000",
       };
+    }
 
-    if (status === "absent")
+    if (status === "absent") {
       return {
         ...base,
         borderColor: "#2a2a2a",
         background: "#111",
         color: "#2a2a2a",
       };
+    }
 
-    if (filled)
+    if (filled) {
       return {
         ...base,
         borderColor: "#2a2a2a",
         background: "transparent",
         color: "#b0b0b0",
       };
+    }
 
     return {
       ...base,
@@ -254,29 +278,32 @@ export default function Wordle() {
       letterSpacing: "0px",
     };
 
-    if (status === "correct")
+    if (status === "correct") {
       return {
         ...base,
         borderColor: "#39ff14",
         background: "rgba(57,255,20,.08)",
         color: "#39ff14",
       };
+    }
 
-    if (status === "present")
+    if (status === "present") {
       return {
         ...base,
         borderColor: "#c8a000",
         background: "rgba(200,160,0,.08)",
         color: "#c8a000",
       };
+    }
 
-    if (status === "absent")
+    if (status === "absent") {
       return {
         ...base,
         borderColor: "#2a2a2a",
         background: "#111",
         color: "#2a2a2a",
       };
+    }
 
     return {
       ...base,
@@ -325,7 +352,7 @@ export default function Wordle() {
         <div
           style={{
             fontSize: "11px",
-            color: solved ? "#39ff14" : "#ff2a1f",
+            color: solved ? "#39ff14" : gameOver ? "#ff2a1f" : "#39ff14",
             marginBottom: "18px",
             minHeight: "16px",
             textAlign: "left",
@@ -345,13 +372,14 @@ export default function Wordle() {
             width: "100%",
           }}
         >
-          {Array.from({ length: MAX_ROWS }).map((_, r) => (
-            <div key={r} style={{ display: "flex", gap: "6px" }}>
-              {Array.from({ length: MAX_COLS }).map((_, c) => {
-                const cell = getCellContent(r, c);
-                const status = getCellStatus(r, c);
+          {Array.from({ length: MAX_ROWS }).map((_, row) => (
+            <div key={row} style={{ display: "flex", gap: "6px" }}>
+              {Array.from({ length: MAX_COLS }).map((_, col) => {
+                const cell = getCellContent(row, col);
+                const status = getCellStatus(row, col);
+
                 return (
-                  <div key={c} style={cellStyle(status, cell !== "")}>
+                  <div key={col} style={cellStyle(status, cell !== "")}>
                     {cell}
                   </div>
                 );
@@ -372,7 +400,15 @@ export default function Wordle() {
           }}
         >
           {keyboardRows.map((row, i) => (
-            <div key={i} style={{ display: "flex", gap: "4px", flexWrap: "wrap", justifyContent: "center" }}>
+            <div
+              key={i}
+              style={{
+                display: "flex",
+                gap: "4px",
+                flexWrap: "wrap",
+                justifyContent: "center",
+              }}
+            >
               {row.map((key) => (
                 <button
                   key={key}
