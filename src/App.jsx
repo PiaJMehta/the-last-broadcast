@@ -24,7 +24,6 @@ function App() {
           <>
             {/* 1. HERO SECTION */}
             <Hero />
-            <Countdown />
             {/* 2. MAP SECTION */}
             <section className="max-w-7xl mx-auto px-10 py-20">
               <div id="map-sector" className="scroll-mt-24">
