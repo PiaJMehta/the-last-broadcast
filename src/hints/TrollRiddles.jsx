@@ -26,6 +26,21 @@ const riddles = [
       "I am the final transmission sent out to everyone before everything goes silent. What am I?",
     answer: "broadcast",
   },
+  {
+    question:
+      "When all systems fail, I am the stored energy source that keeps devices running. What am I?",
+      answer: "battery",
+  },
+  {
+    question:
+      "I connect devices to the internet or communication networks without wires. When I disappear, silence follows. What am I?",
+    answer: "wifi",
+  },
+  {
+    question:
+      "When all networks fall silent, I am the last device that still carries voices through static. What am I?",
+    answer: "radio",
+  },
 ];
 
 export default function TrollRiddles() {
