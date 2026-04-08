@@ -1,10 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function KernelPanicButton() {
   const [isPanicking, setIsPanicking] = useState(false);
   const [hasPanicked, setHasPanicked] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [isDoomed, setIsDoomed] = useState(false);
+  const [pressCount, setPressCount] = useState(0);
+  const pollRef = useRef(null);
+
+  // Poll PressCounter's localStorage count for distraction mode
+  useEffect(() => {
+    pollRef.current = setInterval(() => {
+      const val = parseInt(localStorage.getItem('hint_press_counter_count') || '0', 10);
+      setPressCount(val);
+    }, 500);
+    return () => clearInterval(pollRef.current);
+  }, []);
+
+  // Distraction thresholds
+  const isDistracted = pressCount >= 55 && pressCount < 67 && !hasPanicked;
+  const distractionIntensity = isDistracted ? Math.min((pressCount - 55) / 12, 1) : 0; // 0→1 over 55-67
 
   const handlePress = () => {
     if (isPanicking || isDoomed) return;
@@ -69,6 +84,20 @@ export default function KernelPanicButton() {
           0%, 100% { transform: scale(1); opacity: 1; text-shadow: 0 0 10px rgba(255,0,0,0.5); }
           50% { transform: scale(1.05); opacity: 0.8; text-shadow: 0 0 20px rgba(255,0,0,1); }
         }
+        @keyframes distractPulse {
+          0%, 100% { box-shadow: 0 0 10px rgba(255,0,0,0.2); border-color: rgba(255,0,0,0.3); }
+          50% { box-shadow: 0 0 35px rgba(255,0,0,0.6), 0 0 60px rgba(255,0,0,0.2); border-color: #ff0000; }
+        }
+        @keyframes distractButtonThrob {
+          0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(255,0,0,0.2); }
+          50% { transform: scale(1.08); box-shadow: 0 0 30px rgba(255,0,0,0.6), 0 0 50px rgba(255,0,0,0.15); }
+        }
+        @keyframes distractTextFlicker {
+          0%, 100% { opacity: 0.9; }
+          30% { opacity: 0.4; }
+          60% { opacity: 1; }
+          80% { opacity: 0.3; }
+        }
       `}</style>
 
       {/* Global Overrides while panicking */}
@@ -117,7 +146,7 @@ export default function KernelPanicButton() {
       <div
         style={{
           width: "100%",
-          background: isPanicking ? "rgba(255,0,0,0.2)" : "#0a0000",
+          background: isPanicking ? "rgba(255,0,0,0.2)" : isDistracted ? `rgba(255,0,0,${0.03 + distractionIntensity * 0.08})` : "#0a0000",
           color: "#808080",
           fontFamily: "'Share Tech Mono', monospace",
           padding: "24px",
@@ -128,6 +157,9 @@ export default function KernelPanicButton() {
           alignItems: "center",
           boxSizing: "border-box",
           transition: "background 0.3s, border 0.3s",
+          animation: isDistracted && !isPanicking && !isDoomed
+            ? `distractPulse ${1.2 - distractionIntensity * 0.7}s ease-in-out infinite`
+            : "none",
         }}
       >
         <div
@@ -170,7 +202,9 @@ export default function KernelPanicButton() {
               ? "decoyGlitch 0.05s infinite"
               : isDoomed
                 ? "doomedPulse 0.4s ease-in-out infinite"
-                : "none",
+                : isDistracted
+                  ? `distractButtonThrob ${1.0 - distractionIntensity * 0.5}s ease-in-out infinite`
+                  : "none",
             transform: isPanicking ? "scale(1.05)" : "scale(1)",
             margin: "12px 0 24px 0",
             position: "relative",
@@ -185,6 +219,44 @@ export default function KernelPanicButton() {
         >
           {getButtonText()}
         </button>
+
+        <div style={{
+          fontSize: "11px",
+          letterSpacing: "0.5px",
+          color: "#ff9999",
+          textAlign: "center",
+          lineHeight: "1.8",
+          maxWidth: "380px",
+          marginBottom: "16px",
+          padding: "10px 14px",
+          border: "1px solid rgba(255, 100, 100, 0.3)",
+          borderRadius: "4px",
+          background: "rgba(255, 0, 0, 0.06)",
+        }}>
+          <span style={{ color: "#ff4444", fontWeight: "bold", fontSize: "12px" }}>⚠ EPILEPSY WARNING</span><br />
+          This action triggers intense flashing lights and rapid color shifts. Not recommended for individuals with photosensitive epilepsy.
+        </div>
+
+        {/* Distraction taunts */}
+        {isDistracted && !isPanicking && !isDoomed && !hasPanicked && (
+          <div style={{
+            fontSize: "10px",
+            letterSpacing: "3px",
+            color: "#ff3333",
+            textAlign: "center",
+            marginBottom: "12px",
+            animation: `distractTextFlicker ${0.8 - distractionIntensity * 0.4}s infinite`,
+            textShadow: `0 0 ${8 + distractionIntensity * 12}px rgba(255,0,0,${0.3 + distractionIntensity * 0.4})`,
+          }}>
+            {distractionIntensity < 0.3
+              ? "▶ PRESS ME INSTEAD..."
+              : distractionIntensity < 0.6
+                ? "▶▶ YOU KNOW YOU WANT TO..."
+                : distractionIntensity < 0.85
+                  ? "▶▶▶ STOP WASTING TIME OVER THERE"
+                  : "⚠ LAST CHANCE — PRESS ME NOW ⚠"}
+          </div>
+        )}
 
         {hasPanicked && !isPanicking && (
           <div style={{
