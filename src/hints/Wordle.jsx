@@ -164,18 +164,18 @@ export default function Wordle() {
     }
   };
 
-  useEffect(() => {
-    const onKeyDown = (e) => {
-      if (e.key === "Backspace") return handleKey("⌫");
-      if (e.key === "Enter") return handleKey("↵");
+  // useEffect(() => {
+  //   const onKeyDown = (e) => {
+  //     if (e.key === "Backspace") return handleKey("⌫");
+  //     if (e.key === "Enter") return handleKey("↵");
 
-      const key = e.key.toUpperCase();
-      if (/^[A-Z]$/.test(key)) handleKey(key);
-    };
+  //     const key = e.key.toUpperCase();
+  //     if (/^[A-Z]$/.test(key)) handleKey(key);
+  //   };
 
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [currentGuess, gameOver, currentRow, guesses]);
+  //   window.addEventListener("keydown", onKeyDown);
+  //   return () => window.removeEventListener("keydown", onKeyDown);
+  // }, [currentGuess, gameOver, currentRow, guesses]);
 
   const getCellContent = (row, col) => {
     if (guesses[row]) {
