@@ -16,7 +16,6 @@ function getGuessStatus(guess, target) {
   const targetArr = target.split("");
   const guessArr = guess.split("");
 
-  // First pass: correct letters
   for (let i = 0; i < MAX_COLS; i++) {
     if (guessArr[i] === targetArr[i]) {
       result[i] = "correct";
@@ -25,7 +24,6 @@ function getGuessStatus(guess, target) {
     }
   }
 
-  // Second pass: present letters
   for (let i = 0; i < MAX_COLS; i++) {
     if (guessArr[i] && targetArr.includes(guessArr[i])) {
       result[i] = "present";
@@ -64,7 +62,6 @@ export default function Wordle() {
   const [keyStates, setKeyStates] = useState({});
   const [loaded, setLoaded] = useState(false);
 
-  // Load saved progress ONCE
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
 
@@ -90,7 +87,6 @@ export default function Wordle() {
     setLoaded(true);
   }, []);
 
-  // Save progress ONLY after load is complete
   useEffect(() => {
     if (!loaded) return;
 
@@ -182,12 +178,10 @@ export default function Wordle() {
   }, [currentGuess, gameOver, currentRow, guesses]);
 
   const getCellContent = (row, col) => {
-    // If row already submitted, always show saved guess
     if (guesses[row]) {
       return guesses[row][col] || "";
     }
 
-    // If current active row, show typed guess
     if (row === currentRow && !gameOver) {
       return currentGuess[col] || "";
     }
@@ -216,47 +210,19 @@ export default function Wordle() {
     };
 
     if (status === "correct") {
-      return {
-        ...base,
-        borderColor: "#39ff14",
-        background: "rgba(57,255,20,.08)",
-        color: "#39ff14",
-      };
+      return { ...base, borderColor: "#39ff14", background: "rgba(57,255,20,.08)", color: "#39ff14" };
     }
-
     if (status === "present") {
-      return {
-        ...base,
-        borderColor: "#c8a000",
-        background: "rgba(200,160,0,.08)",
-        color: "#c8a000",
-      };
+      return { ...base, borderColor: "#c8a000", background: "rgba(200,160,0,.08)", color: "#c8a000" };
     }
-
     if (status === "absent") {
-      return {
-        ...base,
-        borderColor: "#2a2a2a",
-        background: "#111",
-        color: "#2a2a2a",
-      };
+      return { ...base, borderColor: "#2a2a2a", background: "#111", color: "#2a2a2a" };
     }
-
     if (filled) {
-      return {
-        ...base,
-        borderColor: "#2a2a2a",
-        background: "transparent",
-        color: "#b0b0b0",
-      };
+      return { ...base, borderColor: "#2a2a2a", background: "transparent", color: "#b0b0b0" };
     }
 
-    return {
-      ...base,
-      borderColor: "#1e1e1e",
-      background: "transparent",
-      color: "transparent",
-    };
+    return { ...base, borderColor: "#1e1e1e", background: "transparent", color: "transparent" };
   };
 
   const keyStyle = (key) => {
@@ -279,37 +245,16 @@ export default function Wordle() {
     };
 
     if (status === "correct") {
-      return {
-        ...base,
-        borderColor: "#39ff14",
-        background: "rgba(57,255,20,.08)",
-        color: "#39ff14",
-      };
+      return { ...base, borderColor: "#39ff14", background: "rgba(57,255,20,.08)", color: "#39ff14" };
     }
-
     if (status === "present") {
-      return {
-        ...base,
-        borderColor: "#c8a000",
-        background: "rgba(200,160,0,.08)",
-        color: "#c8a000",
-      };
+      return { ...base, borderColor: "#c8a000", background: "rgba(200,160,0,.08)", color: "#c8a000" };
     }
-
     if (status === "absent") {
-      return {
-        ...base,
-        borderColor: "#2a2a2a",
-        background: "#111",
-        color: "#2a2a2a",
-      };
+      return { ...base, borderColor: "#2a2a2a", background: "#111", color: "#2a2a2a" };
     }
 
-    return {
-      ...base,
-      borderColor: "#1e1e1e",
-      color: "#484848",
-    };
+    return { ...base, borderColor: "#1e1e1e", color: "#484848" };
   };
 
   return (
@@ -377,7 +322,6 @@ export default function Wordle() {
               {Array.from({ length: MAX_COLS }).map((_, col) => {
                 const cell = getCellContent(row, col);
                 const status = getCellStatus(row, col);
-
                 return (
                   <div key={col} style={cellStyle(status, cell !== "")}>
                     {cell}
@@ -400,15 +344,7 @@ export default function Wordle() {
           }}
         >
           {keyboardRows.map((row, i) => (
-            <div
-              key={i}
-              style={{
-                display: "flex",
-                gap: "4px",
-                flexWrap: "wrap",
-                justifyContent: "center",
-              }}
-            >
+            <div key={i} style={{ display: "flex", gap: "4px", flexWrap: "wrap", justifyContent: "center" }}>
               {row.map((key) => (
                 <button
                   key={key}
