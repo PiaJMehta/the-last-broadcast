@@ -11,6 +11,10 @@ import ProfileCard from './components/SurvivalChances';
 import Wordle from './hints/Wordle';
 import PressCounter from './hints/PressCounter';
 import TrollRiddles from './hints/TrollRiddles';
+import Help from './components/Help';
+import Resources from './components/Resources';
+import Logs from './components/Logs';
+
 import KernelPanicButton from './hints/KernelPanicButton';
 function App() {
   const [view, setView] = useState('home');
@@ -118,15 +122,17 @@ function App() {
           </>
         ) : (
           <div className="pt-10">
-            <Rules />
+            {view === 'rules' && <Rules />}
+            {view === 'help' && <Help />}
+            {view === 'resources' && <Resources />}
+            {view === 'logs' && <Logs />}
           </div>
         )}
       </main>
 
-      <Footer />
+      <Footer setView={setView} />
 
-      {/* CRT Overlay */}
-      <div className="pointer-events-none fixed inset-0 z-9999 opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-size-[100%_4px,3px_100%]"></div>
+      <div className="pointer-events-none fixed inset-0 z-[9999] opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%]"></div>
     </div>
   );
 }
