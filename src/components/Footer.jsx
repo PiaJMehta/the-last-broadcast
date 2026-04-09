@@ -1,6 +1,11 @@
 import React from 'react';
 
-const Footer = () => {
+const Footer = ({ setView }) => {
+  const handleNav = (target) => {
+    setView(target);
+    window.scrollTo(0, 0);
+  };
+
   return (
     <footer className="px-10 py-12 border-t border-green-900/30 mt-10">
       <div className="flex justify-between items-end opacity-40 hover:opacity-100 transition-opacity">
@@ -16,18 +21,24 @@ const Footer = () => {
         {/* RIGHT SIDE */}
         <div className="flex gap-6 items-center text-[9px]">
           
-          <a href="#" className="hover:text-green-400 transition">
+          <button 
+            onClick={() => handleNav('help')} 
+            className="hover:text-green-400 transition font-bold"
+          >
             HELP
-          </a>
+          </button>
 
           {/* Hidden key stays untouched */}
           <a href="#" className="hover:text-white font-black select-none opacity-0">
             X7_SECRET_KEY
           </a>
 
-          <a href="#" className="hover:text-green-400 transition">
+          <button 
+            onClick={() => handleNav('resources')} 
+            className="hover:text-green-400 transition font-bold"
+          >
             RESOURCES
-          </a>
+          </button>
 
           {/* LOCATION LINK */}
           <a
@@ -37,7 +48,6 @@ const Footer = () => {
             className="flex items-center gap-1 hover:text-green-400 transition group"
             title="Last known signal origin"
           >
-            {/* SVG MAP PIN ICON */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -50,7 +60,7 @@ const Footer = () => {
               <circle cx="12" cy="11" r="2.5" />
             </svg>
 
-            <span className="tracking-widest">STYLE</span>
+            <span className="tracking-widest font-bold">STYLE</span>
           </a>
 
         </div>

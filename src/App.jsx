@@ -10,6 +10,9 @@ import ProfileCard from './components/SurvivalChances';
 import Wordle from './hints/Wordle';
 import PressCounter from './hints/PressCounter';
 import TrollRiddles from './hints/TrollRiddles';
+import Help from './components/Help'; 
+import Resources from './components/Resources';
+import Logs from './components/Logs';
 
 function App() {
   const [view, setView] = useState('home');
@@ -60,12 +63,10 @@ function App() {
             {/* 4. SURVIVAL CHANCES & RADAR SECTION - SIDE BY SIDE */}
             <section className="max-w-7xl mx-auto px-10 py-10">
                <div className="flex flex-col md:flex-row gap-6 items-stretch">
-                  {/* Left Side: Survival Calculator */}
                   <div className="w-full md:w-1/2">
                     <ProfileCard />
                   </div>
 
-                  {/* Right Side: Radar GIF */}
                   <div className="w-full md:w-1/2 flex flex-col items-center justify-center border border-green-900/50 p-6 bg-green-900/5 relative overflow-hidden">
                     <div className="absolute top-2 left-4 text-[10px] uppercase tracking-tighter opacity-60">
                       // SCAN_TYPE: ORBITAL_RADAR
@@ -114,14 +115,16 @@ function App() {
           </>
         ) : (
           <div className="pt-10">
-            <Rules />
+            {view === 'rules' && <Rules />}
+            {view === 'help' && <Help />}
+            {view === 'resources' && <Resources />}
+            {view === 'logs' && <Logs />}
           </div>
         )}
       </main>
 
-      <Footer />
+      <Footer setView={setView} />
 
-      {/* CRT Overlay */}
       <div className="pointer-events-none fixed inset-0 z-[9999] opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%]"></div>
     </div>
   );
