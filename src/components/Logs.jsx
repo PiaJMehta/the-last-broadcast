@@ -60,6 +60,9 @@ const BADGE_STYLES = {
   file: { color: '#888',    border: '#444'    },
 };
 
+// noise type per player index: 0=bandpass static, 1=morse, 2=low hum+crackle, 3=high pitched interference
+const NOISE_TYPE = { 0: 0, 2: 1, 3: 2 };
+
 export default function Logs() {
   const actxRef = useRef(null);
   const stateRef = useRef(
@@ -70,6 +73,7 @@ export default function Logs() {
       tids: [],
       progressMs: 0,
       startWallMs: 0,
+      noiseSource: null,
     }))
   );
 
@@ -107,6 +111,89 @@ export default function Logs() {
     stateRef.current[idx].tids = [];
   }
 
+  function killNoise(idx) {
+    const st = stateRef.current[idx];
+    if (st.noiseSource) {
+      try { st.noiseSource.stop(); } catch (e) {}
+      st.noiseSource = null;
+    }
+  }
+
+  function makeNoiseBuffer(ac, type) {
+    const rate = ac.sampleRate, sz = rate * 3;
+    const buf = ac.createBuffer(1, sz, rate);
+    const d = buf.getChannelData(0);
+    if (type === 0) {
+      // pure white noise — bandpass will shape it into radio static
+      for (let i = 0; i < sz; i++) d[i] = Math.random() * 2 - 1;
+    } else if (type === 1) {
+      // low freq hum with random crackles — dying transmission
+      let last = 0;
+      for (let i = 0; i < sz; i++) {
+        last = last * 0.98 + (Math.random() * 2 - 1) * 0.02 + Math.sin(i * 0.02) * 0.3;
+        d[i] = last + (Math.random() < 0.005 ? (Math.random() * 2 - 1) * 0.8 : 0);
+      }
+    } else {
+      // high pitched interference — jammed signal
+      for (let i = 0; i < sz; i++)
+        d[i] = (Math.random() * 2 - 1) * 0.5
+          + Math.sin((i / rate) * 2200 * Math.PI * 2) * 0.3
+          + Math.sin((i / rate) * 2800 * Math.PI * 2) * 0.15;
+    }
+    return buf;
+  }
+
+  function startBlank(idx) {
+    const st = stateRef.current[idx];
+    const ac = gctx();
+    clearTids(idx);
+    killNoise(idx);
+    st.startWallMs = Date.now();
+    setFv(idx, '...', true);
+
+    const noiseType = NOISE_TYPE[idx] ?? 0;
+    const src = ac.createBufferSource();
+    src.buffer = makeNoiseBuffer(ac, noiseType);
+    src.loop = true;
+
+    const gain = ac.createGain();
+
+    if (noiseType === 0) {
+      // bandpass static — classic radio interference
+      const f = ac.createBiquadFilter();
+      f.type = 'bandpass'; f.frequency.value = 800; f.Q.value = 0.8;
+      src.connect(f); f.connect(gain);
+      gain.gain.setValueAtTime(0.15, ac.currentTime);
+      gain.gain.setTargetAtTime(0.05, ac.currentTime + 0.3, 0.2);
+      gain.gain.setTargetAtTime(0.18, ac.currentTime + 0.8, 0.15);
+      gain.gain.setTargetAtTime(0.02, ac.currentTime + 1.4, 0.1);
+    } else if (noiseType === 1) {
+      // low hum + crackle — dying transmission
+      const f = ac.createBiquadFilter();
+      f.type = 'lowpass'; f.frequency.value = 400;
+      src.connect(f); f.connect(gain);
+      gain.gain.setValueAtTime(0.25, ac.currentTime);
+      gain.gain.setTargetAtTime(0.1, ac.currentTime + 0.5, 0.3);
+      gain.gain.setTargetAtTime(0.3, ac.currentTime + 1.2, 0.2);
+    } else {
+      // high pitched interference — jammed signal
+      const f = ac.createBiquadFilter();
+      f.type = 'highpass'; f.frequency.value = 1800;
+      src.connect(f); f.connect(gain);
+      gain.gain.setValueAtTime(0.1, ac.currentTime);
+      gain.gain.setTargetAtTime(0.2, ac.currentTime + 0.2, 0.1);
+      gain.gain.setTargetAtTime(0.05, ac.currentTime + 0.9, 0.2);
+    }
+
+    gain.connect(ac.destination);
+    src.start();
+    st.noiseSource = src;
+
+    const dur = (2500 + Math.random() * 1500) / st.spd;
+    const tid = setTimeout(() => stp(idx), dur);
+    st.tids.push(tid);
+  }
+
   function startMorse(idx, fromMs) {
     const st = stateRef.current[idx];
     const ac = gctx();
@@ -139,58 +226,13 @@ export default function Logs() {
     });
   }
 
-function startBlank(idx) {
-  const st = stateRef.current[idx];
-  const ac = gctx();
-  clearTids(idx);
-  st.startWallMs = Date.now();
-  setFv(idx, '...', true);
-
-  // white noise buffer
-  const bufferSize = ac.sampleRate * 2;
-  const buffer = ac.createBuffer(1, bufferSize, ac.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-
-  const source = ac.createBufferSource();
-  source.buffer = buffer;
-  source.loop = true;
-
-  // bandpass filter to make it sound like a failing radio signal
-  const filter = ac.createBiquadFilter();
-  filter.type = 'bandpass';
-  filter.frequency.value = 800;
-  filter.Q.value = 0.8;
-
-  // gain with slight wobble
-  const gain = ac.createGain();
-  gain.gain.setValueAtTime(0.15, ac.currentTime);
-  gain.gain.setTargetAtTime(0.05, ac.currentTime + 0.3, 0.2);
-  gain.gain.setTargetAtTime(0.18, ac.currentTime + 0.8, 0.15);
-  gain.gain.setTargetAtTime(0.02, ac.currentTime + 1.4, 0.1);
-
-  source.connect(filter);
-  filter.connect(gain);
-  gain.connect(ac.destination);
-  source.start();
-
-  const dur = (2500 + Math.random() * 1500) / st.spd;
-  const tid = setTimeout(() => {
-    source.stop();
-    stp(idx);
-  }, dur);
-  st.tids.push(tid);
-
-  // store source so stop button can kill it immediately
-  st.noiseSource = source;
-}
-
   function tog(idx) {
     const st = stateRef.current[idx];
     if (st.playing) {
       st.playing = false;
       st.paused = true;
       st.progressMs = (Date.now() - st.startWallMs) * st.spd;
+      killNoise(idx);
       clearTids(idx);
       setBtn(idx, false);
       setFv(idx, '— paused —', false);
@@ -213,10 +255,7 @@ function startBlank(idx) {
     st.paused = false;
     st.progressMs = 0;
     st.startWallMs = 0;
-    if (stateRef.current[idx].noiseSource) {
-      try { stateRef.current[idx].noiseSource.stop(); } catch(e) {}
-      stateRef.current[idx].noiseSource = null;
-    }
+    killNoise(idx);
     clearTids(idx);
     setBtn(idx, false);
     setFv(idx, '— standby —', false);
@@ -227,6 +266,7 @@ function startBlank(idx) {
     const wasPlaying = st.playing;
     if (wasPlaying) {
       st.progressMs = (Date.now() - st.startWallMs) * st.spd;
+      killNoise(idx);
       clearTids(idx);
     }
     st.spd = val;
@@ -243,7 +283,7 @@ function startBlank(idx) {
   }
 
   useEffect(() => {
-    return () => { [0, 1, 2, 3].forEach(i => clearTids(i)); };
+    return () => { [0, 1, 2, 3].forEach(i => { clearTids(i); killNoise(i); }); };
   }, []);
 
   function Badge({ cls, label }) {
