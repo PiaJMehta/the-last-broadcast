@@ -65,7 +65,7 @@ export default function Resources() {
   // ── width collapse detection ──
   useEffect(() => {
     function check() {
-      const narrow = window.innerWidth <= 600 && window.screen.width <= 768;
+      const narrow = window.innerWidth <= 600;
       if (narrow && phaseRef.current === 'idle') {
         setPhaseSync('frozen');
         frozenAt.current = Date.now();
