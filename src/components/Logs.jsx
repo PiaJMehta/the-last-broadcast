@@ -139,15 +139,51 @@ export default function Logs() {
     });
   }
 
-  function startBlank(idx) {
-    const st = stateRef.current[idx];
-    clearTids(idx);
-    st.startWallMs = Date.now();
-    setFv(idx, '...', true);
-    const dur = (3000 + Math.random() * 2000) / st.spd;
-    const tid = setTimeout(() => stp(idx), dur);
-    st.tids.push(tid);
-  }
+function startBlank(idx) {
+  const st = stateRef.current[idx];
+  const ac = gctx();
+  clearTids(idx);
+  st.startWallMs = Date.now();
+  setFv(idx, '...', true);
+
+  // white noise buffer
+  const bufferSize = ac.sampleRate * 2;
+  const buffer = ac.createBuffer(1, bufferSize, ac.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+  const source = ac.createBufferSource();
+  source.buffer = buffer;
+  source.loop = true;
+
+  // bandpass filter to make it sound like a failing radio signal
+  const filter = ac.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.value = 800;
+  filter.Q.value = 0.8;
+
+  // gain with slight wobble
+  const gain = ac.createGain();
+  gain.gain.setValueAtTime(0.15, ac.currentTime);
+  gain.gain.setTargetAtTime(0.05, ac.currentTime + 0.3, 0.2);
+  gain.gain.setTargetAtTime(0.18, ac.currentTime + 0.8, 0.15);
+  gain.gain.setTargetAtTime(0.02, ac.currentTime + 1.4, 0.1);
+
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(ac.destination);
+  source.start();
+
+  const dur = (2500 + Math.random() * 1500) / st.spd;
+  const tid = setTimeout(() => {
+    source.stop();
+    stp(idx);
+  }, dur);
+  st.tids.push(tid);
+
+  // store source so stop button can kill it immediately
+  st.noiseSource = source;
+}
 
   function tog(idx) {
     const st = stateRef.current[idx];
@@ -177,6 +213,10 @@ export default function Logs() {
     st.paused = false;
     st.progressMs = 0;
     st.startWallMs = 0;
+    if (stateRef.current[idx].noiseSource) {
+      try { stateRef.current[idx].noiseSource.stop(); } catch(e) {}
+      stateRef.current[idx].noiseSource = null;
+    }
     clearTids(idx);
     setBtn(idx, false);
     setFv(idx, '— standby —', false);
