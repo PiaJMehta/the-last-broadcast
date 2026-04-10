@@ -372,7 +372,7 @@ export default function Resources() {
 
         <p className="text-[10px] mb-8 opacity-50 uppercase tracking-[0.3em]">
           {/* ACCESS_PROTOCOL (fragment 3 of 5) — step_3 = ArrowLeft */}
-          Warning: Accessing restricted database. Data packets may be corrupted.
+          Warning: Accessing restricted database. Data packets may be corrupted. Resources are limited. Subjects may behave unpredictably under pressure. 
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
