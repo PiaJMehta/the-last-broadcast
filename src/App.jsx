@@ -14,8 +14,11 @@ import TrollRiddles from './hints/TrollRiddles';
 import Help from './components/Help';
 import Resources from './components/Resources';
 import Logs from './components/Logs';
-
 import KernelPanicButton from './hints/KernelPanicButton';
+
+import Dither from './animations/Dither';
+import FaultyTerminal from './animations/FaultyTerminal';
+
 function App() {
   const [view, setView] = useState('home');
 
@@ -28,8 +31,44 @@ function App() {
           <>
             {/* 1. HERO SECTION */}
             <Hero />
+
+            {/* DITHER BACKGROUND — fixed behind all content after Hero */}
+            <div style={{ position: "fixed", inset: 0, width: '100%', height: '100%', opacity: 0.3, zIndex: 0, pointerEvents: 'none', }}>
+              {/* <FaultyTerminal
+                scale={2.5}
+                gridMul={[2, 1]}
+                digitSize={1.8}
+                timeScale={0.5}
+                pause={false}
+                scanlineIntensity={0.5}
+                glitchAmount={1}
+                flickerAmount={1}
+                noiseAmp={1}
+                chromaticAberration={0}
+                dither={0}
+                curvature={0.1}
+                tint="#2bda3f"
+                mouseReact
+                mouseStrength={0.5}
+                pageLoadAnimation
+                brightness={0.6}
+              /> */}
+              <Dither
+                waveColor={[0.3,0.8,0.7]}
+                disableAnimation={false}
+                enableMouseInteraction
+                mouseRadius={0.3}
+                colorNum={4}
+                waveAmplitude={0.3}
+                waveFrequency={3}
+                waveSpeed={0.05}
+              />
+            </div>
+
+            {/* All sections below sit above the Dither layer via z-index */}
+
             {/* 2. MAP SECTION */}
-            <section className="max-w-7xl mx-auto px-10 py-20">
+            <section className="relative z-10 max-w-7xl mx-auto px-10 py-20">
               <div id="map-sector" className="scroll-mt-24">
                 <div className="flex justify-between items-end border-b border-green-900 pb-2 mb-4">
                   <h3 className="text-xl font-bold">
@@ -50,7 +89,7 @@ function App() {
             </section>
 
             {/* 3. SURVIVAL & SYSTEM LOGS SECTION */}
-            <section className="max-w-7xl mx-auto px-10 pb-20 grid grid-cols-1 md:grid-cols-2 gap-10">
+            <section className="relative z-10 max-w-7xl mx-auto px-10 pb-20 grid grid-cols-1 md:grid-cols-2 gap-10">
               <div className="flex flex-col gap-4">
                 <h3 className="text-xl font-bold border-b border-green-900 pb-2">// SYSTEM_HEALTH</h3>
                 <SurvivalStatus />
@@ -62,7 +101,7 @@ function App() {
             </section>
 
             {/* 4. SURVIVAL CHANCES & RADAR SECTION - SIDE BY SIDE */}
-            <section className="max-w-7xl mx-auto px-10 py-10">
+            <section className="relative z-10 max-w-7xl mx-auto px-10 py-10">
               <div className="flex flex-col md:flex-row gap-6 items-stretch">
                 {/* Left Side: Survival Calculator */}
                 <div className="w-full md:w-1/2">
@@ -87,7 +126,7 @@ function App() {
             </section>
 
             {/* 5. HINTS SECTION */}
-            <section className="max-w-7xl mx-auto px-10 pt-16 pb-20">
+            <section className="relative z-10 max-w-7xl mx-auto px-10 pt-16 pb-20">
               <div
                 style={{
                   display: "flex",
@@ -114,7 +153,7 @@ function App() {
             </section>
 
             {/* 6. RULES SECTION */}
-            <section className="border-t border-green-900/30 bg-green-900/5 pb-20">
+            <section className="relative z-10 border-t border-green-900/30 bg-green-900/5 pb-20">
               <div className="max-w-7xl mx-auto">
                 <Rules />
               </div>
