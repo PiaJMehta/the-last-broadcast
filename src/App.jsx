@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Footer from './components/Footer';
@@ -16,8 +16,22 @@ import Resources from './components/Resources';
 import Logs from './components/Logs';
 
 import KernelPanicButton from './hints/KernelPanicButton';
+
 function App() {
-  const [view, setView] = useState('home');
+  const [view, setView] = useState(() => {
+    const path = window.location.pathname.replace('/', '');
+    return path || 'home';
+  });
+
+  useEffect(() => {
+    const handlePopState = (event) => {
+      const path = window.location.pathname.replace('/', '');
+      setView(path || 'home');
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#050505] text-green-500 font-mono selection:bg-green-500 selection:text-black overflow-x-hidden scroll-smooth">

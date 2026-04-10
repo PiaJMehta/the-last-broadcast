@@ -35,7 +35,7 @@ export default defineConfig({
                         const url = (req.url || '').split('?')[0];
 
                         // Check if this is a known route (root, or a file that exists)
-                        const knownPaths = ['/', '/index.html'];
+                        const knownPaths = ['/', '/index.html', '/logs', '/rules', '/help', '/resources'];
                         const isKnown = knownPaths.includes(url)
                             || fs.existsSync(path.join('public', url))
                             || fs.existsSync(path.join('.', url));
