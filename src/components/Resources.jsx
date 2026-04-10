@@ -7,6 +7,7 @@ import React, { useEffect, useRef, useState } from 'react';
 const SEQUENCE     = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'F10'];
 const Z_PATTERN    = [0, 1, 2, 4, 6, 7, 8];
 const GLITCH_CHARS = '!@#$%^&*<>╗╔╝╚═║▓▒░';
+const SILENCE_MS   = 10000;
 
 function scramble(str) {
   return str.split('').map(c =>
@@ -41,7 +42,6 @@ export default function Resources() {
     { id: '10', data: '' },
   ];
 
-  // phase: idle | frozen | early_warn | waiting | pattern | unlocked
   const [phase, setPhase]               = useState('idle');
   const [overlay, setOverlay]           = useState(null);
   const [patternPath, setPatternPath]   = useState([]);
@@ -49,42 +49,37 @@ export default function Resources() {
   const [drawing, setDrawing]           = useState(false);
   const [scrambledMsg, setScrambledMsg] = useState('DO NOT TOUCH ANYTHING');
 
-  const phaseRef     = useRef('idle');
-  const seqIdxRef    = useRef(0);
-  const frozenAt     = useRef(null);
-  const overlayTimer = useRef(null);
-  const scrambleInt  = useRef(null);
+  const phaseRef      = useRef('idle');
+  const seqIdxRef     = useRef(0);
+  const lastKeyTime   = useRef(null);  // tracks when last key was pressed
+  const overlayTimer  = useRef(null);  // auto-dismiss warning
+  const scrambleInt   = useRef(null);
 
   function setPhaseSync(p) {
     phaseRef.current = p;
     setPhase(p);
   }
 
-  // ── one-way freeze on width collapse ──
+  // ── one-way freeze ──
   useEffect(() => {
     function check() {
       if (window.innerWidth <= 600 && phaseRef.current === 'idle') {
         setPhaseSync('frozen');
-        frozenAt.current = Date.now();
+        lastKeyTime.current = null;
         seqIdxRef.current = 0;
       }
-      // intentionally no un-freeze on resize back
     }
     window.addEventListener('resize', check);
     check();
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  // ── freeze cursor globally ──
+  // ── freeze cursor ──
   useEffect(() => {
     const id = 'freeze-style';
     let el = document.getElementById(id);
-    if (phase === 'frozen' || phase === 'early_warn' || phase === 'waiting') {
-      if (!el) {
-        el = document.createElement('style');
-        el.id = id;
-        document.head.appendChild(el);
-      }
+    if (phase === 'frozen' || phase === 'warn' || phase === 'sequencing') {
+      if (!el) { el = document.createElement('style'); el.id = id; document.head.appendChild(el); }
       el.textContent = `
         * { cursor: none !important; pointer-events: none !important; }
         #unfreeze-overlay, #unfreeze-overlay * { pointer-events: all !important; }
@@ -101,48 +96,67 @@ export default function Resources() {
       const p = phaseRef.current;
       if (p === 'idle' || p === 'pattern' || p === 'unlocked') return;
 
-      // any key while frozen and no overlay → show "don't touch" immediately
-      if (p === 'frozen' && overlay === null) {
-        showEarlyWarn();
+      const now = Date.now();
+      const silenceOk = lastKeyTime.current === null
+        ? false
+        : (now - lastKeyTime.current) >= SILENCE_MS;
+
+      // ── in sequence mode: they started the sequence correctly ──
+      if (p === 'sequencing') {
+        const expected = SEQUENCE[seqIdxRef.current];
+        if (e.key === expected) {
+          seqIdxRef.current += 1;
+          if (seqIdxRef.current >= SEQUENCE.length) {
+            // sequence complete!
+            seqIdxRef.current = 0;
+            lastKeyTime.current = null;
+            stopScramble();
+            setPhaseSync('pattern');
+            setOverlay('pattern');
+            setPatternPath([]);
+            setPatternError(false);
+          }
+          // correct key mid-sequence — don't flash warning, just continue
+          return;
+        } else {
+          // wrong key mid-sequence → reset, flash warning
+          seqIdxRef.current = 0;
+          setPhaseSync('frozen');
+          lastKeyTime.current = now;
+          flashWarn();
+          return;
+        }
+      }
+
+      // ── frozen or warn phase: any key ──
+      // check if 10s silence has passed AND this is the start key (↑)
+      if (silenceOk && e.key === SEQUENCE[0]) {
+        // start sequence!
+        seqIdxRef.current = 1;
+        setPhaseSync('sequencing');
+        // don't flash warning — they did it right
+        lastKeyTime.current = now;
         return;
       }
 
-      // while waiting (after early warn dismissed) — listen for sequence
-      if (p === 'waiting') {
-        if (e.key !== SEQUENCE[seqIdxRef.current]) {
-          seqIdxRef.current = 0;
-          return;
-        }
-        seqIdxRef.current += 1;
-        if (seqIdxRef.current < SEQUENCE.length) return;
-        seqIdxRef.current = 0;
-
-        const elapsed = frozenAt.current ? Date.now() - frozenAt.current : 99999;
-        if (elapsed < 10000) {
-          showEarlyWarn();
-        } else {
-          stopScramble();
-          setPhaseSync('pattern');
-          setOverlay('pattern');
-          setPatternPath([]);
-          setPatternError(false);
-        }
-      }
+      // any other key (or right key but too early) → flash warning + reset timer
+      lastKeyTime.current = now;
+      seqIdxRef.current = 0;
+      flashWarn();
     }
+
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [overlay]);
+  }, []);
 
-  function showEarlyWarn() {
-    setPhaseSync('early_warn');
+  function flashWarn() {
     startScramble('DO NOT TOUCH ANYTHING');
     setOverlay('early');
     clearTimeout(overlayTimer.current);
     overlayTimer.current = setTimeout(() => {
       stopScramble();
       setOverlay(null);
-      setPhaseSync('waiting');
-    }, 3000);
+    }, 2500);
   }
 
   function startScramble(base) {
@@ -164,7 +178,7 @@ export default function Resources() {
     setPatternPath([]);
     setPatternError(false);
     setDrawing(false);
-    frozenAt.current = null;
+    lastKeyTime.current = null;
     seqIdxRef.current = 0;
     const s = document.getElementById('freeze-style');
     if (s) s.remove();
@@ -231,17 +245,17 @@ export default function Resources() {
     <>
       <style>{`
         @keyframes chaosGlitch {
-          0%   { transform:translate(0) skewX(0deg);        text-shadow:-3px 0 #0ff,3px 0 #f0f; }
-          10%  { transform:translate(-4px,1px) skewX(-3deg);text-shadow:3px 0 #0ff,-3px 0 #f0f; }
-          20%  { transform:translate(3px,-2px) skewX(2deg); text-shadow:-2px 0 #39ff14,4px 0 #ff2a1f; }
-          30%  { transform:translate(-2px,2px) skewX(-1deg);text-shadow:none; }
-          40%  { transform:translate(4px,0) skewX(3deg);    text-shadow:-4px 0 #0ff,2px 0 #f0f; }
-          50%  { transform:translate(0) skewX(0deg);        text-shadow:3px 0 #ff2a1f,-3px 0 #0ff; }
+          0%   { transform:translate(0) skewX(0deg);         text-shadow:-3px 0 #0ff,3px 0 #f0f; }
+          10%  { transform:translate(-4px,1px) skewX(-3deg); text-shadow:3px 0 #0ff,-3px 0 #f0f; }
+          20%  { transform:translate(3px,-2px) skewX(2deg);  text-shadow:-2px 0 #39ff14,4px 0 #ff2a1f; }
+          30%  { transform:translate(-2px,2px) skewX(-1deg); text-shadow:none; }
+          40%  { transform:translate(4px,0) skewX(3deg);     text-shadow:-4px 0 #0ff,2px 0 #f0f; }
+          50%  { transform:translate(0) skewX(0deg);         text-shadow:3px 0 #ff2a1f,-3px 0 #0ff; }
           60%  { transform:translate(-3px,-1px) skewX(-2deg);text-shadow:none; }
-          70%  { transform:translate(2px,2px) skewX(1deg);  text-shadow:-2px 0 #f0f,2px 0 #39ff14; }
-          80%  { transform:translate(-4px,0) skewX(-3deg);  text-shadow:4px 0 #0ff,-2px 0 #ff2a1f; }
-          90%  { transform:translate(3px,-2px) skewX(2deg); text-shadow:none; }
-          100% { transform:translate(0) skewX(0deg);        text-shadow:-3px 0 #0ff,3px 0 #f0f; }
+          70%  { transform:translate(2px,2px) skewX(1deg);   text-shadow:-2px 0 #f0f,2px 0 #39ff14; }
+          80%  { transform:translate(-4px,0) skewX(-3deg);   text-shadow:4px 0 #0ff,-2px 0 #ff2a1f; }
+          90%  { transform:translate(3px,-2px) skewX(2deg);  text-shadow:none; }
+          100% { transform:translate(0) skewX(0deg);         text-shadow:-3px 0 #0ff,3px 0 #f0f; }
         }
         @keyframes shakeBox {
           0%,100%{transform:translate(0);}
@@ -255,11 +269,11 @@ export default function Resources() {
           0%,100%{opacity:1;} 15%{opacity:0.2;} 30%{opacity:1;}
           45%{opacity:0.5;}   60%{opacity:0.1;} 75%{opacity:1;} 90%{opacity:0.3;}
         }
-        @keyframes blink   { 0%,100%{opacity:1} 50%{opacity:0} }
-        @keyframes slideBar{ from{background-position:0 0} to{background-position:12px 0} }
+        @keyframes blink    { 0%,100%{opacity:1} 50%{opacity:0} }
+        @keyframes slideBar { from{background-position:0 0} to{background-position:12px 0} }
       `}</style>
 
-      {/* ── EARLY WARN OVERLAY ── */}
+      {/* ── WARN OVERLAY ── */}
       {overlay === 'early' && (
         <div style={wrapStyle} id="unfreeze-overlay">
           <div style={scanStyle} />
@@ -372,7 +386,7 @@ export default function Resources() {
 
         <p className="text-[10px] mb-8 opacity-50 uppercase tracking-[0.3em]">
           {/* ACCESS_PROTOCOL (fragment 3 of 5) — step_3 = ArrowLeft */}
-          Warning: Accessing restricted database. Data packets may be corrupted. Resources are limited. Subjects may behave unpredictably under pressure. 
+          Warning: Accessing restricted database. Data packets may be corrupted.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
