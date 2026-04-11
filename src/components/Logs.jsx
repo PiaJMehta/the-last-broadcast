@@ -198,7 +198,7 @@ const BADGE_STYLES = {
 
 const NOISE_TYPE = { 0: 0, 2: 1, 3: 2 };
 
-// ── MORSE PLAYER COMPONENT ──────────────────────────────────────
+// ── MORSE PLAYER COMPONENT
 function MorseSection() {
   const actxRef = useRef(null);
   const stateRef = useRef(
