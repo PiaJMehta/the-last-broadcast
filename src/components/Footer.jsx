@@ -23,7 +23,7 @@ const Footer = ({ setView }) => {
           
           <button 
             onClick={() => handleNav('help')} 
-            className="hover:text-green-400 transition font-bold"
+            className="hover:text-green-400 transition font-bold opacity-5 animate-pulse"
           >
             HELP
           </button>
