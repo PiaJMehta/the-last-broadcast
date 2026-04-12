@@ -37,7 +37,10 @@ const Countdown = () => {
   }, [targetDate]);
 
   useEffect(() => {
-    const payload = `COUNTDOWN::Let_the_world_know_that_time_is_running_out::targetDate=${JSON.stringify(Date.now())}`
+    // When participants find this cookie and run atob() on it in the console,
+    // they will see "FRAGMENT_BRAVO" telling them this is the BRAVO fragment
+    // for the Signal terminal puzzle.
+    const payload = `FRAGMENT_BRAVO::Let_the_world_know_that_time_is_running_out (Implement)`;
     const encoded = btoa(payload);
     document.cookie = `vault_clue=${encoded}; path=/; max-age=31536000`;
   }, []);
@@ -63,8 +66,10 @@ const Countdown = () => {
           </div>
         ))}
       </div>
-      <p className="text-center text-[10px] opacity-11 animation-pulse font-bold tracking-widest animate-pulse">
-        TH4L4_W0ULD_P1CK_?_-_/S3CT0R-?
+      <p className="text-center text-[10px] opacity-10 animation-pulse font-bold tracking-widest animate-pulse">
+        H4WVEMCUIMZVGL27FVPT6X2LIMYVAX2EJRKTAV27GRGDISCU <br />
+        What’s uncovered must face the other way.
+
       </p>
     </div>
   );
