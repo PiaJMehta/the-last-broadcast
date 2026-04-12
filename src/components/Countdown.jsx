@@ -66,8 +66,10 @@ const Countdown = () => {
           </div>
         ))}
       </div>
-      <p className="text-center text-[10px] opacity-11 animation-pulse font-bold tracking-widest animate-pulse">
-        TH4L4_W0ULD_P1CK_?_-_/S3CT0R-?
+      <p className="text-center text-[10px] opacity-10 animation-pulse font-bold tracking-widest animate-pulse">
+        H4WVEMCUIMZVGL27FVPT6X2LIMYVAX2EJRKTAV27GRGDISCU <br />
+        What’s uncovered must face the other way.
+
       </p>
     </div>
   );
