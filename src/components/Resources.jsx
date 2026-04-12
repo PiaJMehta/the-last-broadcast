@@ -360,7 +360,7 @@ export default function Resources() {
         <p className="text-[10px] mb-8 opacity-50 uppercase tracking-[0.3em]">
           Warning: Accessing restricted database. Data packets may be corrupted.
           <br/>
-          This page acts differently under pressure.
+          This page acts differently when compressed.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
           {ciphers.map((item) => (
