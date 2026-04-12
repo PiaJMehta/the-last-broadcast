@@ -5,9 +5,14 @@ const Logs = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
 
-  // Force the audio file to appear in the Network tab on mount
+  // Force the audio file to appear in the Network tab on mount by bypassing cache
   useEffect(() => {
-    fetch('/signals/intercepted_signal.wav').catch(() => { });
+    fetch('/signals/intercepted_signal.wav?v=' + Date.now())
+      .then(res => res.blob())
+      .catch(() => { });
+
+    // A subtle hint for the player
+    console.log("%c[SYSTEM] Rerouting hidden spectral data. Monitor network traffic for anomalies.", "color: #39ff14; font-weight: bold; font-family: monospace;");
   }, []);
 
   const togglePlay = () => {
