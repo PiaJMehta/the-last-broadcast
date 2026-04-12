@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Footer from './components/Footer';
@@ -6,16 +6,31 @@ import MapDisplay from './components/MapDisplay';
 import Rules from './components/Rules';
 import SurvivalStatus from './components/SurvivalStatus';
 import SystemLogs from './components/SystemLogs';
+import Countdown from './components/Countdown';
 import ProfileCard from './components/SurvivalChances';
 import Wordle from './hints/Wordle';
 import PressCounter from './hints/PressCounter';
 import TrollRiddles from './hints/TrollRiddles';
-import Help from './components/Help'; 
+import Help from './components/Help';
 import Resources from './components/Resources';
 import Logs from './components/Logs';
+import KernelPanicButton from './hints/KernelPanicButton';
 
 function App() {
-  const [view, setView] = useState('home');
+  const [view, setView] = useState(() => {
+    const path = window.location.pathname.replace('/', '');
+    return path || 'home';
+  });
+
+  useEffect(() => {
+    const handlePopState = (event) => {
+      const path = window.location.pathname.replace('/', '');
+      setView(path || 'home');
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#050505] text-green-500 font-mono selection:bg-green-500 selection:text-black overflow-x-hidden scroll-smooth">
@@ -62,25 +77,27 @@ function App() {
 
             {/* 4. SURVIVAL CHANCES & RADAR SECTION - SIDE BY SIDE */}
             <section className="max-w-7xl mx-auto px-10 py-10">
-               <div className="flex flex-col md:flex-row gap-6 items-stretch">
-                  <div className="w-full md:w-1/2">
-                    <ProfileCard />
-                  </div>
+              <div className="flex flex-col md:flex-row gap-6 items-stretch">
+                {/* Left Side: Survival Calculator */}
+                <div className="w-full md:w-1/2">
+                  <ProfileCard />
+                </div>
 
-                  <div className="w-full md:w-1/2 flex flex-col items-center justify-center border border-green-900/50 p-6 bg-green-900/5 relative overflow-hidden">
-                    <div className="absolute top-2 left-4 text-[10px] uppercase tracking-tighter opacity-60">
-                      // SCAN_TYPE: ORBITAL_RADAR
-                    </div>
-                    <img 
-                      src="/radar.gif" 
-                      alt="Radar Scan" 
-                      className="w-full max-w-[400px] aspect-square object-contain opacity-80 mix-blend-screen sepia(100%) hue-rotate-[90deg] brightness(1.2)"
-                    />
-                    <div className="mt-4 text-[10px] font-bold text-green-800 animate-pulse tracking-[0.2em]">
-                      SENSORS_DETECTING_METADATA_PACKETS...
-                    </div>
+                {/* Right Side: Radar GIF */}
+                <div className="w-full md:w-1/2 flex flex-col items-center justify-center border border-green-900/50 p-6 bg-green-900/5 relative overflow-hidden">
+                  <div className="absolute top-2 left-4 text-[10px] uppercase tracking-tighter opacity-60">
+                    // SCAN_TYPE: ORBITAL_RADAR
                   </div>
-               </div>
+                  <img
+                    src="/radar.gif"
+                    alt="Radar Scan"
+                    className="w-full max-w-[400px] aspect-square object-contain opacity-80 mix-blend-screen sepia(100%) hue-rotate-[90deg] brightness(1.2)"
+                  />
+                  <div className="mt-4 text-[10px] font-bold text-green-800 animate-pulse tracking-[0.2em]">
+                    SENSORS_DETECTING_METADATA_PACKETS...
+                  </div>
+                </div>
+              </div>
             </section>
 
             {/* 5. HINTS SECTION */}
@@ -101,6 +118,10 @@ function App() {
                 <div style={{ flex: "0.9", minWidth: "320px" }}>
                   <PressCounter />
                 </div>
+              </div>
+
+              <div style={{ marginBottom: "32px" }}>
+                <KernelPanicButton />
               </div>
 
               <TrollRiddles />

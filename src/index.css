@@ -43,6 +43,15 @@ body::before {
   100% { top: 0%; opacity: 0.1; }
 }
 
+@keyframes scanLine {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
+}
+
+.animate-scan {
+  animation: scanLine 4s linear infinite;
+}
+
 body {
   font-family: 'Share Tech Mono', monospace;
 }

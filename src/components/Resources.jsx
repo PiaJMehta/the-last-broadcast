@@ -1,5 +1,4 @@
 import React from 'react';
-
 const Resources = () => {
   const ciphers = [
     { id: "01", data: "r2^@Ih78shnk"},
@@ -15,17 +14,14 @@ const Resources = () => {
     { id: "11", data: "bjs*&027sva"},
     { id: "12", data: "hshb7^*&%hv"},
   ];
-
   return (
     <div className="max-w-7xl mx-auto py-20 px-10 font-mono min-h-screen">
       <h1 className="text-4xl font-black mb-8 border-b border-green-500 pb-2">
         // SURVIVAL_RESOURCES.DB 
       </h1>
-
       <p className="text-[10px] mb-8 opacity-50 uppercase tracking-[0.3em]">
         Warning: Accessing restricted database. Data packets may be corrupted. 
       </p>
-
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
         {ciphers.map((item) => (
           <div 
@@ -37,7 +33,6 @@ const Resources = () => {
                 PACKET_{item.id}
               </span>
             </div>
-
             <div className="bg-black/40 p-3 border border-green-900/20 break-all">
               <code className="text-xs text-green-500 opacity-80 group-hover:opacity-100">
                 {item.data}
@@ -46,13 +41,10 @@ const Resources = () => {
           </div>
         ))}
       </div>
-
       <p className="text-[10px] mt-8 mb-8 opacity-30 uppercase tracking-[0.3em]">
         dangerdangerdangerdangerdangerdangerdangerdangerdangerdangerdangerdangerdangerdangerdangerdangerdangerdangerdangerdangerdangerdangerdanger
       </p>
-
     </div>
   );
 };
-
 export default Resources;
