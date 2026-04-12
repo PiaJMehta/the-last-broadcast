@@ -14,7 +14,6 @@ import TrollRiddles from './hints/TrollRiddles';
 import Help from './components/Help';
 import Resources from './components/Resources';
 import Logs from './components/Logs';
-
 import KernelPanicButton from './hints/KernelPanicButton';
 
 function App() {
@@ -42,6 +41,7 @@ function App() {
           <>
             {/* 1. HERO SECTION */}
             <Hero />
+
             {/* 2. MAP SECTION */}
             <section className="max-w-7xl mx-auto px-10 py-20">
               <div id="map-sector" className="scroll-mt-24">
@@ -86,7 +86,7 @@ function App() {
                 {/* Right Side: Radar GIF */}
                 <div className="w-full md:w-1/2 flex flex-col items-center justify-center border border-green-900/50 p-6 bg-green-900/5 relative overflow-hidden">
                   <div className="absolute top-2 left-4 text-[10px] uppercase tracking-tighter opacity-60">
-                      // SCAN_TYPE: ORBITAL_RADAR
+                    // SCAN_TYPE: ORBITAL_RADAR
                   </div>
                   <img
                     src="/radar.gif"
