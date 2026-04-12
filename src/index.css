@@ -9,15 +9,16 @@
     font-family: "Share Tech Mono", monospace;
   }
 }
+
 :root {
-  --terminal-green: #22c55e; 
+  --terminal-green: #22c55e;
   --bg-black: #050505;
 }
 
 body {
   background-color: var(--bg-black);
   color: var(--terminal-green);
-  font-family: 'Share Tech Mono', monospace; 
+  font-family: 'Share Tech Mono', monospace;
   text-transform: uppercase;
 }
 
@@ -25,9 +26,12 @@ body::before {
   content: " ";
   display: block;
   position: fixed;
-  top: 0; left: 0; bottom: 0; right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-              linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
   z-index: 100;
   background-size: 100% 4px, 3px 100%;
   pointer-events: none;
@@ -38,14 +42,30 @@ body::before {
 }
 
 @keyframes scanHorizontal {
-  0% { top: 0%; opacity: 0.1; }
-  50% { top: 100%; opacity: 0.5; }
-  100% { top: 0%; opacity: 0.1; }
+  0% {
+    top: 0%;
+    opacity: 0.1;
+  }
+
+  50% {
+    top: 100%;
+    opacity: 0.5;
+  }
+
+  100% {
+    top: 0%;
+    opacity: 0.1;
+  }
 }
 
 @keyframes scanLine {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(1000%); }
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(1000%);
+  }
 }
 
 .animate-scan {
@@ -54,4 +74,53 @@ body::before {
 
 body {
   font-family: 'Share Tech Mono', monospace;
+}
+
+/* ── Bookshelf puzzle animations ── */
+@keyframes bookGlow {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    box-shadow: 0 0 6px rgba(57, 255, 20, 0.2);
+  }
+
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 18px rgba(57, 255, 20, 0.5);
+  }
+}
+
+@keyframes revealFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes letterPop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
 }
