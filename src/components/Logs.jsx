@@ -5,25 +5,13 @@ const Logs = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
 
-  // Force the audio file into memory/cache and explicitly save it to localStorage
-  // This allows players to discover the file in the "Application -> Local Storage" tab 
-  // if they miss it in the Network tab.
+  // Add the direct URL to localStorage for players to discover via DevTools
   useEffect(() => {
-    fetch('/signals/intercepted_signal.wav?v=' + Date.now())
-      .then(res => res.blob())
-      .then(blob => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          try {
-            // Save Base64 audio into LocalStorage for players to find
-            localStorage.setItem('ARCHIVED_SIGNAL_RAW', reader.result);
-          } catch (e) {
-            // Might exceed quota, but we try
-          }
-        };
-        reader.readAsDataURL(blob);
-      })
-      .catch(() => { });
+    try {
+      localStorage.setItem('ARCHIVED_SIGNAL_RAW', window.location.origin + '/signals/intercepted_signal.wav');
+    } catch (e) {
+      // ignore
+    }
 
     // A subtle hint for the player
     console.log("%c[SYSTEM] Rerouting hidden spectral data. Monitor network traffic & local memory structures.", "color: #39ff14; font-weight: bold; font-family: monospace;");
