@@ -27,6 +27,15 @@ const SystemLogs = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // ← ADDED: save ALPHA fragment to localStorage so it persists when user
+  // navigates away from homepage to the Signal page
+  useEffect(() => {
+    const el = document.querySelector('[data-key-alpha]');
+    if (el) {
+      localStorage.setItem('fragment_alpha', el.getAttribute('data-key-alpha'));
+    }
+  }, []);
+
   return (
     <>
       <div className="border border-green-900 p-4 bg-black/60 h-48 overflow-hidden font-mono text-[9px] leading-tight">
@@ -38,7 +47,12 @@ const SystemLogs = () => {
             </div>
           ))}
           <div className="w-2 h-4 bg-green-500 animate-pulse inline-block"></div>
-          <div data-signal="QSByb3RhdGluZyBzaWduIG9mIGxpZmUgaXMgYmV0dGVyIHRoYW4gc2lsZW5jZQ==" className="hidden"></div>
+
+          <div
+            data-key-alpha="2f"
+            data-signal="QSByb3RhdGluZyBzaWduIG9mIGxpZmUgaXMgYmV0dGVyIHRoYW4gc2lsZW5jZQ=="
+            className="hidden"
+          ></div>
         </div>
       </div>
       <div className="mt-4 text-center">

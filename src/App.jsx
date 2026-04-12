@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Footer from './components/Footer';
@@ -15,12 +15,25 @@ import Help from './components/Help';
 import Resources from './components/Resources';
 import Logs from './components/Logs';
 import KernelPanicButton from './hints/KernelPanicButton';
-
+import SignalTerminal from './components/SignalTerminal';
 import Dither from './animations/Dither';
 import FaultyTerminal from './animations/FaultyTerminal';
 
 function App() {
-  const [view, setView] = useState('home');
+  const [view, setView] = useState(() => {
+    const path = window.location.pathname.replace('/', '');
+    return path || 'home';
+  });
+
+  useEffect(() => {
+    const handlePopState = (event) => {
+      const path = window.location.pathname.replace('/', '');
+      setView(path || 'home');
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#050505] text-green-500 font-mono selection:bg-green-500 selection:text-black overflow-x-hidden scroll-smooth">
@@ -34,25 +47,6 @@ function App() {
 
             {/* DITHER BACKGROUND — fixed behind all content after Hero */}
             <div style={{ position: "fixed", inset: 0, width: '100%', height: '100%', opacity: 0.3, zIndex: 0, pointerEvents: 'none', }}>
-              {/* <FaultyTerminal
-                scale={2.5}
-                gridMul={[2, 1]}
-                digitSize={1.8}
-                timeScale={0.5}
-                pause={false}
-                scanlineIntensity={0.5}
-                glitchAmount={1}
-                flickerAmount={1}
-                noiseAmp={1}
-                chromaticAberration={0}
-                dither={0}
-                curvature={0.1}
-                tint="#2bda3f"
-                mouseReact
-                mouseStrength={0.5}
-                pageLoadAnimation
-                brightness={0.6}
-              /> */}
               <Dither
                 waveColor={[0.3,0.8,0.7]}
                 disableAnimation={false}
@@ -64,8 +58,6 @@ function App() {
                 waveSpeed={0.05}
               />
             </div>
-
-            {/* All sections below sit above the Dither layer via z-index */}
 
             {/* 2. MAP SECTION */}
             <section className="relative z-10 max-w-7xl mx-auto px-10 py-20">
@@ -103,15 +95,12 @@ function App() {
             {/* 4. SURVIVAL CHANCES & RADAR SECTION - SIDE BY SIDE */}
             <section className="relative z-10 max-w-7xl mx-auto px-10 py-10">
               <div className="flex flex-col md:flex-row gap-6 items-stretch">
-                {/* Left Side: Survival Calculator */}
                 <div className="w-full md:w-1/2">
                   <ProfileCard />
                 </div>
-
-                {/* Right Side: Radar GIF */}
                 <div className="w-full md:w-1/2 flex flex-col items-center justify-center border border-green-900/50 p-6 bg-green-900/5 relative overflow-hidden">
                   <div className="absolute top-2 left-4 text-[10px] uppercase tracking-tighter opacity-60">
-                      // SCAN_TYPE: ORBITAL_RADAR
+                    // SCAN_TYPE: ORBITAL_RADAR
                   </div>
                   <img
                     src="/radar.gif"
@@ -139,7 +128,6 @@ function App() {
                 <div style={{ flex: "1.25", minWidth: "420px" }}>
                   <Wordle />
                 </div>
-
                 <div style={{ flex: "0.9", minWidth: "320px" }}>
                   <PressCounter />
                 </div>
@@ -165,6 +153,7 @@ function App() {
             {view === 'help' && <Help />}
             {view === 'resources' && <Resources />}
             {view === 'logs' && <Logs />}
+            {view === 'signal' && <SignalTerminal />}
           </div>
         )}
       </main>
