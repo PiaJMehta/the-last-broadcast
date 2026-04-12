@@ -1,8 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
+import Bookshelf from '../hints/Bookshelf';
 
 const Logs = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
+
+  // Add the direct URL to localStorage for players to discover via DevTools
+  useEffect(() => {
+    try {
+      localStorage.setItem('ARCHIVED_SIGNAL_RAW', window.location.origin + '/signals/intercepted_signal.wav');
+    } catch (e) {
+      // ignore
+    }
+
+    // A subtle hint for the player
+    console.log("%c[SYSTEM] Rerouting hidden spectral data. Monitor network traffic & local memory structures.", "color: #39ff14; font-weight: bold; font-family: monospace;");
+  }, []);
 
   const togglePlay = () => {
     if (isPlaying) {
@@ -113,6 +126,9 @@ const Logs = () => {
             <span>[ MODE: STEGANO_SPECTRAL ]</span>
           </div>
         </div>
+
+        {/* Bookshelf Puzzle Section */}
+        <Bookshelf />
       </div>
       <MorseSection />
     </div>
@@ -121,9 +137,9 @@ const Logs = () => {
 
 // ── MORSE SECTION ──────────────────────────────────────────────
 const MC = {
-  A:'.-',N:'-.',B:'-...',O:'---',C:'-.-.',P:'.--.',D:'-..',Q:'--.-',
-  E:'.',R:'.-.',F:'..-.',S:'...',G:'--.',T:'-',H:'....',U:'..-',
-  I:'..',V:'...-',J:'.---',W:'.--',K:'-.-',X:'-..-',L:'.-..',Y:'-.--',M:'--',Z:'--..'
+  A: '.-', N: '-.', B: '-...', O: '---', C: '-.-.', P: '.--.', D: '-..', Q: '--.-',
+  E: '.', R: '.-.', F: '..-.', S: '...', G: '--.', T: '-', H: '....', U: '..-',
+  I: '..', V: '...-', J: '.---', W: '.--', K: '-.-', X: '-..-', L: '.-..', Y: '-.--', M: '--', Z: '--..'
 };
 const WORD = 'ANIMATE';
 const DOT = 100, DASH = 300, SYM_GAP = 100, LETTER_GAP = 300;
@@ -149,35 +165,35 @@ const MORSE_EVENTS = buildEvents();
 const TOTAL_MS = MORSE_EVENTS[MORSE_EVENTS.length - 1].t;
 
 const ARCHIVE_LOGS = [
-  { time: '08:00', badge: 'SYS',  cls: 'sys',  msg: 'System boot successful',                                              size: '' },
-  { time: '09:15', badge: 'RF',   cls: 'rf',   msg: 'Broadcast signal detected at 501.5 MHz',                             size: '3.1KB' },
-  { time: '09:28', badge: 'WARN', cls: 'warn', msg: 'Checksum mismatch — node_cache_09.tmp — skipping',                   size: '3.1KB' },
-  { time: '09:44', badge: 'FS',   cls: 'fs',   msg: 'index_rebuild.log — writing to /var/arc/idx',                        size: '1.9KB' },
-  { time: '09:59', badge: 'FILE', cls: 'file', msg: 'arc_noise_001.dat — recovered from /arc/cache/raw — unverified',     size: '1.2KB', player: 0 },
-  { time: '10:11', badge: 'ERR',  cls: 'err',  msg: 'Packet loss at relay_4 — retransmit failed x3',                      size: '' },
-  { time: '10:29', badge: 'IO',   cls: 'io',   msg: 'sector_dump_B.bin — read complete',                                  size: '22.7KB' },
-  { time: '10:42', badge: 'SYS',  cls: 'sys',  msg: 'Encrypted packet received: SECTOR_7G',                               size: '8.8KB' },
-  { time: '10:58', badge: 'FILE', cls: 'file', msg: 'signal_burst_003.dat — recovered from /arc/cache/raw — unverified',  size: '2.4KB', player: 1 },
-  { time: '11:03', badge: 'WARN', cls: 'warn', msg: 'Memory fragmentation at 71% — GC deferred',                          size: '' },
-  { time: '11:19', badge: 'NET',  cls: 'net',  msg: 'relay_proxy_out.log — outbound routes blocked',                      size: '5.3KB' },
-  { time: '11:31', badge: 'ERR',  cls: 'err',  msg: 'Uplink dropped — carrier lost — last ping 503ms',                    size: '' },
-  { time: '11:48', badge: 'FILE', cls: 'file', msg: 'dead_channel_007.dat — recovered from /arc/cache/raw — unverified',  size: '9.8KB', player: 2 },
-  { time: '12:05', badge: 'IO',   cls: 'io',   msg: 'arc_manifest_v2.bin — 8 entries found, 3 unreadable',                size: '9.8KB' },
-  { time: '12:17', badge: 'FS',   cls: 'fs',   msg: 'backup_delta_03.log — write failed — disk quota exceeded',           size: '0.4KB' },
-  { time: '12:33', badge: 'FILE', cls: 'file', msg: 'burst_remnant_B.dat — recovered from /arc/cache/raw — unverified',   size: '4.1KB', player: 3 },
-  { time: '12:44', badge: 'WARN', cls: 'warn', msg: 'Thermal threshold exceeded — fan_ctrl_02 unresponsive',              size: '' },
-  { time: '12:59', badge: 'RF',   cls: 'rf',   msg: 'Signal degradation — 501.5 MHz dropping to noise floor',             size: '1.7KB' },
+  { time: '08:00', badge: 'SYS', cls: 'sys', msg: 'System boot successful', size: '' },
+  { time: '09:15', badge: 'RF', cls: 'rf', msg: 'Broadcast signal detected at 501.5 MHz', size: '3.1KB' },
+  { time: '09:28', badge: 'WARN', cls: 'warn', msg: 'Checksum mismatch — node_cache_09.tmp — skipping', size: '3.1KB' },
+  { time: '09:44', badge: 'FS', cls: 'fs', msg: 'index_rebuild.log — writing to /var/arc/idx', size: '1.9KB' },
+  { time: '09:59', badge: 'FILE', cls: 'file', msg: 'arc_noise_001.dat — recovered from /arc/cache/raw — unverified', size: '1.2KB', player: 0 },
+  { time: '10:11', badge: 'ERR', cls: 'err', msg: 'Packet loss at relay_4 — retransmit failed x3', size: '' },
+  { time: '10:29', badge: 'IO', cls: 'io', msg: 'sector_dump_B.bin — read complete', size: '22.7KB' },
+  { time: '10:42', badge: 'SYS', cls: 'sys', msg: 'Encrypted packet received: SECTOR_7G', size: '8.8KB' },
+  { time: '10:58', badge: 'FILE', cls: 'file', msg: 'signal_burst_003.dat — recovered from /arc/cache/raw — unverified', size: '2.4KB', player: 1 },
+  { time: '11:03', badge: 'WARN', cls: 'warn', msg: 'Memory fragmentation at 71% — GC deferred', size: '' },
+  { time: '11:19', badge: 'NET', cls: 'net', msg: 'relay_proxy_out.log — outbound routes blocked', size: '5.3KB' },
+  { time: '11:31', badge: 'ERR', cls: 'err', msg: 'Uplink dropped — carrier lost — last ping 503ms', size: '' },
+  { time: '11:48', badge: 'FILE', cls: 'file', msg: 'dead_channel_007.dat — recovered from /arc/cache/raw — unverified', size: '9.8KB', player: 2 },
+  { time: '12:05', badge: 'IO', cls: 'io', msg: 'arc_manifest_v2.bin — 8 entries found, 3 unreadable', size: '9.8KB' },
+  { time: '12:17', badge: 'FS', cls: 'fs', msg: 'backup_delta_03.log — write failed — disk quota exceeded', size: '0.4KB' },
+  { time: '12:33', badge: 'FILE', cls: 'file', msg: 'burst_remnant_B.dat — recovered from /arc/cache/raw — unverified', size: '4.1KB', player: 3 },
+  { time: '12:44', badge: 'WARN', cls: 'warn', msg: 'Thermal threshold exceeded — fan_ctrl_02 unresponsive', size: '' },
+  { time: '12:59', badge: 'RF', cls: 'rf', msg: 'Signal degradation — 501.5 MHz dropping to noise floor', size: '1.7KB' },
 ];
 
 const BADGE_STYLES = {
-  rf:   { color: '#39ff14', border: '#39ff14' },
+  rf: { color: '#39ff14', border: '#39ff14' },
   warn: { color: '#ff6b00', border: '#ff6b00' },
-  err:  { color: '#ff2a1f', border: '#ff2a1f' },
-  fs:   { color: '#2a7a5a', border: '#2a7a5a' },
-  io:   { color: '#2a5a7a', border: '#2a5a7a' },
-  sys:  { color: '#39ff14', border: '#1a5a1a' },
-  net:  { color: '#5a3a7a', border: '#3a2a5a' },
-  file: { color: '#888',    border: '#444'    },
+  err: { color: '#ff2a1f', border: '#ff2a1f' },
+  fs: { color: '#2a7a5a', border: '#2a7a5a' },
+  io: { color: '#2a5a7a', border: '#2a5a7a' },
+  sys: { color: '#39ff14', border: '#1a5a1a' },
+  net: { color: '#5a3a7a', border: '#3a2a5a' },
+  file: { color: '#888', border: '#444' },
 };
 
 const NOISE_TYPE = { 0: 0, 2: 1, 3: 2 };
@@ -229,7 +245,7 @@ function MorseSection() {
   function killNoise(idx) {
     const st = stateRef.current[idx];
     if (st.noiseSource) {
-      try { st.noiseSource.stop(); } catch (e) {}
+      try { st.noiseSource.stop(); } catch (e) { }
       st.noiseSource = null;
     }
   }

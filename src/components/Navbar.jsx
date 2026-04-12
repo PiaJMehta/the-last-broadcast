@@ -31,19 +31,26 @@ const Navbar = ({ setView }) => {
         >
           LOGS
         </button>
-        <a
-          href="#map-sector"
-          onClick={() => setView('home')}
+
+        <button
+          onClick={() => {
+            setView('home');
+            window.history.pushState({ view: 'home' }, '', '/');
+            setTimeout(() => {
+              const el = document.getElementById('map-sector');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+          }}
           className="hover:text-green-400 hover:underline transition-colors uppercase font-bold"
         >
           MAP
-        </a>
+        </button>
         <button
-  onClick={() => handleNav('signal')}
-  className="hover:text-green-400 hover:underline transition-colors uppercase font-bold opacity-30 hover:opacity-100"
->
-  SIGNAL
-</button>
+          onClick={() => handleNav('signal')}
+          className="hover:text-green-400 hover:underline transition-colors uppercase font-bold opacity-30 hover:opacity-100"
+        >
+          SIGNAL
+        </button>
       </div>
 
       <div className="text-green-500 font-bold tracking-widest hidden xs:block">
