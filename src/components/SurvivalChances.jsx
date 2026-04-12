@@ -1,8 +1,6 @@
-import { PenOff } from "lucide-react";
 import { useState, useEffect } from "react";
 
-// Check your chances of survival, the answer reveals a clue that is hidden in the local storage. The clue will
-// tell the participants to add a profile card to their site.
+
 
 const SurvivalChances = () => {
     const [profile, setProfile] = useState({
@@ -22,8 +20,11 @@ const SurvivalChances = () => {
     const teams = ["SOLO", "PAIR", "TRIO"];
 
     useEffect(() => {
+        // When participants find this localStorage value and run atob() on it,
+        // they will see "FRAGMENT_CHARLIE" — telling them this is the CHARLIE fragment
+        // for the Signal terminal puzzle.
         const itemKey = "SYS_FRAGMENT_PROFILE";
-        const itemValue = btoa(`Add_who_you_claim_to_be`);
+        const itemValue = btoa(`FRAGMENT_CHARLIE::Add_who_you_claim_to_be`);
         localStorage.setItem(itemKey, itemValue);
     }, []);
 

@@ -15,7 +15,7 @@ import Help from './components/Help';
 import Resources from './components/Resources';
 import Logs from './components/Logs';
 import KernelPanicButton from './hints/KernelPanicButton';
-
+import SignalTerminal from './components/SignalTerminal';
 function App() {
   const [view, setView] = useState(() => {
     const path = window.location.pathname.replace('/', '');
@@ -75,15 +75,12 @@ function App() {
               </div>
             </section>
 
-            {/* 4. SURVIVAL CHANCES & RADAR SECTION - SIDE BY SIDE */}
+            {/* 4. SURVIVAL CHANCES & RADAR SECTION */}
             <section className="max-w-7xl mx-auto px-10 py-10">
               <div className="flex flex-col md:flex-row gap-6 items-stretch">
-                {/* Left Side: Survival Calculator */}
                 <div className="w-full md:w-1/2">
                   <ProfileCard />
                 </div>
-
-                {/* Right Side: Radar GIF */}
                 <div className="w-full md:w-1/2 flex flex-col items-center justify-center border border-green-900/50 p-6 bg-green-900/5 relative overflow-hidden">
                   <div className="absolute top-2 left-4 text-[10px] uppercase tracking-tighter opacity-60">
                     // SCAN_TYPE: ORBITAL_RADAR
@@ -114,7 +111,6 @@ function App() {
                 <div style={{ flex: "1.25", minWidth: "420px" }}>
                   <Wordle />
                 </div>
-
                 <div style={{ flex: "0.9", minWidth: "320px" }}>
                   <PressCounter />
                 </div>
@@ -140,6 +136,7 @@ function App() {
             {view === 'help' && <Help />}
             {view === 'resources' && <Resources />}
             {view === 'logs' && <Logs />}
+            {view === 'signal' && <SignalTerminal />}
           </div>
         )}
       </main>

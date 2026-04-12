@@ -17,6 +17,7 @@ const Navbar = ({ setView }) => {
         <span className="text-green-500 font-bold group-hover:animate-pulse">● THE LAST BROADCAST</span>
         <span className="opacity-40 hidden sm:inline tracking-tighter">DAY ONE OF UNKNOWN</span>
       </div>
+
       <div className="flex gap-10 opacity-60">
         <button
           onClick={() => handleNav('rules')}
@@ -30,14 +31,21 @@ const Navbar = ({ setView }) => {
         >
           LOGS
         </button>
-        <a                              
+        <a
           href="#map-sector"
           onClick={() => setView('home')}
           className="hover:text-green-400 hover:underline transition-colors uppercase font-bold"
         >
           MAP
         </a>
+        <button
+  onClick={() => handleNav('signal')}
+  className="hover:text-green-400 hover:underline transition-colors uppercase font-bold opacity-30 hover:opacity-100"
+>
+  SIGNAL
+</button>
       </div>
+
       <div className="text-green-500 font-bold tracking-widest hidden xs:block">
         501.5 MHz
       </div>
