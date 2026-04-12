@@ -40,7 +40,7 @@ const Countdown = () => {
     // When participants find this cookie and run atob() on it in the console,
     // they will see "FRAGMENT_BRAVO" telling them this is the BRAVO fragment
     // for the Signal terminal puzzle.
-    const payload = `FRAGMENT_BRAVO::Let_the_world_know_that_time_is_running_out (Implement)`;
+    const payload = `FRAGMENT_BRAVO::Let_the_world_know_that_time_is_running_out`;
     const encoded = btoa(payload);
     document.cookie = `vault_clue=${encoded}; path=/; max-age=31536000`;
   }, []);
