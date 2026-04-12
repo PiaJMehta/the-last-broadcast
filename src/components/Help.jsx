@@ -8,7 +8,7 @@ const CLASSIFIED_RECORDS = [
   { key: 'OPERATOR',    val: '[REDACTED]', reveal: 'UNIT_7-ECHO'   },
   { key: 'ORIGIN_NODE', val: '[REDACTED]', reveal: 'NODE_44.7.119' },
   { key: 'AUTH_TOKEN',  val: '[REDACTED]', reveal: '0xF3A1-CC9D'   },
-  { key: 'CODE.GUESS',    val: '[REDACTED]', reveal: '1-2-3-5-7-8-9'},
+  { key: 'CODE.GUESS',  val: '[REDACTED]', reveal: '1-2-3-5-7-8-9' },
   { key: 'LAST_PING',   val: '[REDACTED]', reveal: '04:17:32 UTC'  },
   { key: 'PRIORITY',    val: '[REDACTED]', reveal: 'CRITICAL ⬛'   },
 ];
@@ -340,22 +340,14 @@ const Help = () => {
         {/* ════ HIDDEN SEQUENCE — only visible in light mode ════
             color matches dark background — invisible until bg changes
             participants find this by switching background to light via console/inspect */}
-        <div
-          style={{
-            marginTop: 0,
-            padding: '5px 12px',
-            background: '#000',
-            border: '1px solid #000',
-            borderRadius: 6,
-          }}
-        >
+        <div style={{ marginTop: 0, padding: '5px 12px', background: '#000', border: '1px solid #000', borderRadius: 6 }}>
           <div style={{ marginTop: 0, padding: '24px 28px', background: '#000000', border: 'none', borderRadius: 6, userSelect: 'none', pointerEvents: 'none' }}>
             <div style={{ fontSize: 9, letterSpacing: '0.38em', textTransform: 'uppercase', color: '#000000', marginBottom: 20, fontFamily: "'JetBrains Mono','Courier New',monospace", textAlign: 'center' }}>
               ACCESS_PROTOCOL — SEQUENCE RECOVERED
             </div>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 24, fontFamily: "'JetBrains Mono','Courier New',monospace" }}>
               {['↑', '↓', '←', '→', 'F10'].map((k, i) => (
-              <span key={i} style={{ fontSize: 16, letterSpacing: '0.12em', color: '#000000' }}>{k}</span>
+                <span key={i} style={{ fontSize: 16, letterSpacing: '0.12em', color: '#000000' }}>{k}</span>
               ))}
             </div>
             <div style={{ marginTop: 20, fontSize: 9, letterSpacing: '0.24em', color: '#000000', lineHeight: 2, textAlign: 'center' }}>
@@ -364,6 +356,7 @@ const Help = () => {
           </div>
         </div>
         {/* ════ END HIDDEN SEQUENCE ════ */}
+
       </div>
     </div>
   );
