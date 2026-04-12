@@ -1,4 +1,5 @@
 import React from 'react';
+
 const Navbar = ({ setView }) => {
   const handleNav = (target) => {
     setView(target);
@@ -6,6 +7,7 @@ const Navbar = ({ setView }) => {
     const path = target === 'home' ? '/' : `/${target}`;
     window.history.pushState({ view: target }, '', path);
   };
+
   return (
     <nav className="fixed top-0 w-full z-50 flex justify-between items-center px-10 py-4 text-[10px] border-b border-green-900/30 bg-black/90 backdrop-blur-sm">
       <div
@@ -28,7 +30,7 @@ const Navbar = ({ setView }) => {
         >
           LOGS
         </button>
-        
+        <a                              
           href="#map-sector"
           onClick={() => setView('home')}
           className="hover:text-green-400 hover:underline transition-colors uppercase font-bold"
@@ -42,4 +44,5 @@ const Navbar = ({ setView }) => {
     </nav>
   );
 };
+
 export default Navbar;
