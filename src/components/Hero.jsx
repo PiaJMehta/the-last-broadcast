@@ -5,7 +5,7 @@ import LetterGlitch from '../animations/LetterGlitch';
 const Hero = () => {
   return (
     <section className="relative h-[80vh] w-full flex flex-col items-center justify-center px-10">
-      <div className="absolute inset-0 z-0 opacity-40">
+      <div className="absolute inset-0 z-0 opacity-100">
         <LetterGlitch glitchSpeed={50} centerVignette={true} smooth={true} />
       </div>
       <div className="z-10 grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-7xl">
